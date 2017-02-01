@@ -27,3 +27,16 @@
 *.exe
 *.out
 *.app
+
+
+Debug/
+Release/
+x64/
+
+P4*
+p4*
+VML/
+
+*.vcxproj*
+
+*.output
