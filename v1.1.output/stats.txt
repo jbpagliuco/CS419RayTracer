@@ -1,0 +1,8 @@
+------------------------------------------------------------
+Elapsed Time: 604423816 usec (604.424 sec)
+Number of objects in world: 3
+Render target stats: 
+	Resolution: 1000x1000
+	Total number of pixels rendered: 1000000
+	Average time per pixel: 0.00165447 usec
+------------------------------------------------------------

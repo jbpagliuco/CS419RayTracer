@@ -1,0 +1,5 @@
+First version of ray tracing engine.
+
+- Basic ray tracing
+- Spheres and planes
+- No shading

@@ -1,0 +1,3 @@
+- Lights
+- Point and parallel lights
+- Specified in world file
