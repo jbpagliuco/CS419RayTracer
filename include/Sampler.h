@@ -5,6 +5,7 @@
 
 namespace RE
 {
+	// Generates a sample of points.
 	typedef std::vector<VML::VECTOR2F>(*SamplerGenerator)(I32, I32);
 
 	class Sampler
@@ -13,11 +14,13 @@ namespace RE
 		// Default constructor
 		Sampler();
 
+		// Creates a sampler.
 		Sampler(I32 numSamples);
 
 		// Destructor
 		virtual ~Sampler();
 
+		// Gets the number of samples.
 		I32 GetNumSamples()const;
 
 		// Generates the samples according to the sampling generator function.
@@ -49,9 +52,11 @@ namespace RE
 	};
 
 
-
+	// Generates sample points from a regular distribution.
 	std::vector<VML::VECTOR2F> RegularSampler(I32 numSamples, I32 numSets);
+	// Generates sample points from a multi-jittered distribution.
 	std::vector<VML::VECTOR2F> MultiJitteredSampler(I32 numSamples, I32 numSets);
 
+	// Returns a sample generator from the string.
 	SamplerGenerator GetSamplerGeneratorFromString(const std::string& str);
 }

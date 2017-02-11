@@ -55,9 +55,12 @@ namespace RE
 
 		virtual ~Camera();
 
+		// Sets the viewport of this camera.
 		virtual void SetViewport(Viewport vp);
+		// Gets the viewport.
 		Viewport GetViewport()const;
 
+		// Sets the background color.
 		void SetBackgroundColor(Color color);
 
 		// Renders the scene from the viewpoint of this camera.
@@ -65,8 +68,13 @@ namespace RE
 		// @return The resulting color buffer.
 		virtual const ColorBuffer2D& RenderScene(World* pWorld);
 
+		// Renders a single pixel.
+		// @param row - The pixel's row.
+		// @param col - The pixel's column.
+		// @param pWorld - A pointer to the world to render.
 		virtual Color RenderPixel(U32 row, U32 col, World* pWorld) = 0;
 
+		// Gets the position of this camera.
 		VML::Vector GetPosition()const;
 
 	private:
@@ -91,9 +99,18 @@ namespace RE
 	public:
 		OrthographicCamera();
 
+		// Creates an orthographic camera.
+		// @param eyePos - The position of this camera.
+		// @param lookat - The lookat point of the camera.
+		// @param up - The world up vector.
+		// @param halfWidth - The halfwidth of the viewport window.
 		OrthographicCamera(const VML::VECTOR3F& eyePos, const VML::VECTOR3F& lookat, const VML::VECTOR3F& up,
 							F32 halfWidth);
 
+		// Renders a single pixel.
+		// @param row - The pixel's row.
+		// @param col - The pixel's column.
+		// @param pWorld - A pointer to the world to render.
 		virtual Color RenderPixel(U32 row, U32 col, World* pWorld);
 
 	protected:
@@ -108,11 +125,22 @@ namespace RE
 	public:
 		PinholeCamera();
 
+		// Creates a pinhole camera.
+		// @param eyePos - The position of this camera.
+		// @param lookat - The lookat point of the camera.
+		// @param up - The world up vector.
+		// @param distanceToViewPlane - The distance from the camera to the view plane.
+		// @param zoom - The zoom factor of this camera.
 		PinholeCamera(const VML::VECTOR3F& eyePos, const VML::VECTOR3F& lookat, const VML::VECTOR3F& up,
 			F32 distanceToViewPlane, F32 zoom);
 
+		// Sets the viewport of this camera.
 		virtual void SetViewport(Viewport vp) override;
 
+		// Renders a single pixel.
+		// @param row - The pixel's row.
+		// @param col - The pixel's column.
+		// @param pWorld - A pointer to the world to render.
 		virtual Color RenderPixel(U32 row, U32 col, World* pWorld);
 
 	protected:

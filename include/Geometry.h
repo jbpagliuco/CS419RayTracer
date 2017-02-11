@@ -5,7 +5,7 @@
 
 namespace RE
 {
-
+	// Epsilon value to change shadow ray origins.
 	const F32 RAY_EPSILON = (10 * VML::FLOAT_EPSILON);
 
 	class Ray

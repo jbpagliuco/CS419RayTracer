@@ -24,10 +24,11 @@
 
 
 @Camera
-    pos 5.0 5.0 7.0
+    pos 3.0 3.0 6.0
     lookat 0.0 0.0 0.0
     up 0.0 1.0 0.0
-    pinhole 1.0 1.0
+    pinhole 1.0 2.0
+
     
     
     
@@ -43,7 +44,9 @@
     point 1.0 5.0 -3.0 900.0
     
     
-    
+tOrange
+    Geometry tri   -8.0 0.0 -2.0     -10.5 2.0 1.0      -5.0 -1.0 3.0
+    Material 0.2   0.6 0.3 0.0 1.0   0.0 0.0 0.0 1.0    0.0
     
 sRed
     Geometry sphere   0.0 -1.0 3.0   1.0

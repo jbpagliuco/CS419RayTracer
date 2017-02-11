@@ -27,6 +27,8 @@ namespace RE
 	Color OrthographicCamera::RenderPixel(U32 row, U32 col, World* pWorld)
 	{
 		VML::VECTOR3F pixelCoords = vp.GetUnitSquareSample(row, col);
+		pixelCoords.x *= halfWidth;
+		pixelCoords.y *= halfWidth;
 		VML::Vector rayOriginWorld = (u * pixelCoords.x) + (v * pixelCoords.y);
 		Ray ray(eye + rayOriginWorld, forwardDirection);
 
@@ -35,6 +37,7 @@ namespace RE
 
 		if (!bHit)
 			rto.color = backgroundColor;
+		rto.color.a = 1.0f;
 
 		return rto.color;
 	}

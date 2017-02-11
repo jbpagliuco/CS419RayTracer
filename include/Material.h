@@ -12,9 +12,13 @@ namespace RE
 
 		virtual ~Material();
 
+		// Gets the ambient factor.
 		F32 GetAmbient()const;
+		// Gets the diffuse color.
 		Color GetDiffuseColor()const;
+		// Gets the specular color.
 		Color GetSpecularColor()const;
+		// Gets the shininess.
 		F32 GetShininess()const;
 
 	protected:

@@ -17,12 +17,22 @@ namespace RE
 	{
 	public:
 		ImageCV();
+		// Creates an empty image.
+		// @param width - The width of the image.
+		// @param height - The height of the image.
 		ImageCV(U32 width, U32 height);
+
+		// Creates an image and initializes it to the buffer.
+		// @param width - The width of the image.
+		// @param height - The height of the image.
+		// @param colorBuffer - The color buffer.
 		ImageCV(U32 width, U32 height, const ColorBuffer2D* colorBuffer);
 
-		void SaveToFile(const std::string& file)const;
-
 		virtual ~ImageCV() = default;
+
+		// Saves this image to a file on disk.
+		// @param file - The filename.
+		void SaveToFile(const std::string& file)const;
 
 	private:
 #ifndef HIDE_OPENCV
