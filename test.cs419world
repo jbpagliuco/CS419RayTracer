@@ -8,7 +8,8 @@
 # Geometry plane normalX normalY normalZ
 # Geometry tri   p1x p1y p1z   p2x p2y p2z   p3x p3y p3z
 #
-# Material ambientFactor   diffuseR diffuseG diffuseB    specularR specularG specularB    shininess
+# Material matte ka kd cdR cdG cdB cdA
+# Material phong ka kd cdR cdG cdB cdA    ks csR csG csB csA exp
 #
 # @Camera pos, lookat, up
 # @Camera ortho halfwidth
@@ -47,17 +48,17 @@
 sRed
     Transform 0.0 -1.0 3.0
     Geometry @Sphere1
-    Material matte   0.4   2.0    1.0 0.0 0.0 1.0
+    Material phong   0.4   2.0    1.0 0.0 0.0 1.0    1.0   1.0 1.0 1.0 1.0  64.0
     
 sGreen
     Transform 0.0 0.0 0.0
     Geometry @Sphere2
-    Material matte   0.4   2.0    0.3 1.0 0.3 1.0
+    Material phong   0.4   2.0    0.3 1.0 0.3 1.0    1.0   1.0 1.0 1.0 1.0  16.0
     
 sBlue
     Transform 0.0 -0.5 -3.5
     Geometry @Sphere1.5
-    Material matte   0.4   2.0    0.0 0.0 1.0 1.0
+    Material phong   0.4   2.0    0.0 0.0 1.0 1.0    1.0   1.0 1.0 1.0 1.0  128.0
     
 floor
     Transform 0.0 -2.0 0.0

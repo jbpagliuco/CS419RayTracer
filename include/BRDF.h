@@ -79,4 +79,44 @@ namespace RE
 		// Diffuse color
 		Color cd;
 	};
+
+
+	class GlossySpecular : public BRDF
+	{
+	public:
+		GlossySpecular(const Color& cs, F32 ks, F32 exp);
+
+		virtual ~GlossySpecular();
+
+		// Calculates the BRDF.
+		// @param ei - The intersection.
+		// @param wi - The incoming direction.
+		// @param wo - The outgoing direction.
+		virtual Color F(const ElementIntersection& ei, const VML::Vector& wi, const VML::Vector& wo)const override;
+
+		// Samples the BRDF.
+		// @param ei - The intersection.
+		// @param wi - The incoming direction.
+		// @param wo - The outgoing direction.
+		virtual Color SampleF(const ElementIntersection& ei, const VML::Vector& wi, const VML::Vector& wo)const override;
+
+		// Calculates the bihemispherical reflectance.
+		// @param ei - The intersection.
+		// @param wi - The incoming direction.
+		// @param wo - The outgoing direction.
+		virtual Color Rho(const ElementIntersection& ei, const VML::Vector& wi, const VML::Vector& wo)const override;
+
+		// Calculates the bihemispherical reflectance.
+		// @param ei - The intersection.
+		// @param wo - The outgoing direction.
+		virtual Color Rho(const ElementIntersection& ei, const VML::Vector& wo)const override;
+
+	private:
+		// Specular color
+		Color cs;
+		// Specular multiplier
+		F32 ks;
+		// Specular exponent
+		F32 exp;
+	};
 }

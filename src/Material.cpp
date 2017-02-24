@@ -41,6 +41,15 @@ namespace RE
 
 			return new Matte(ka, kd, color);
 		}
+		else if (type == "phong")
+		{
+			F32 ka, kd, ks, exp;
+			Color cd, cs;
+			iss >> ka >> kd >> cd.r >> cd.g >> cd.b >> cd.a
+				>> ks >> cs.r >> cs.g >> cs.b >> cs.a >> exp;
+
+			return new Phong(ka, kd, cd, ks, cs, exp);
+		}
 
 		return nullptr;
 	}
