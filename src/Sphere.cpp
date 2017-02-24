@@ -2,32 +2,16 @@
 
 namespace RE
 {
-	Sphere::Sphere()
+	Sphere::Sphere() : radius(1.0f)
 	{
-		this->origin = VML::Vector(0.0f, 0.0f, 0.0f, 1.0f);
-		this->radius = 1.0f;
-
-		boundingSphere = BoundingSphere(origin, radius);
 	}
 
-	Sphere::Sphere(const VML::VECTOR3F& origin, F32 radius)
+	Sphere::Sphere(F32 radius) : radius(radius)
 	{
-		this->origin = VML::Vector(origin.x, origin.y, origin.z, 1.0f);
-		this->radius = radius;
-
-		boundingSphere = BoundingSphere(this->origin, radius);
 	}
 
-	Sphere::Sphere(const VML::Vector& origin, F32 radius)
+	bool Sphere::Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const
 	{
-		this->origin = VML::Vector(origin);
-		this->radius = radius;
-
-		boundingSphere = BoundingSphere(origin, radius);
-	}
-
-	bool Sphere::Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const
-	{
-		return boundingSphere.Intersects(outHitInfo, ray);
+		return BoundingSphere(elementTransform.position, radius).Intersects(outHitInfo, ray);
 	}
 }

@@ -28,11 +28,15 @@ namespace RE
 		normal = ((b - a).v3Cross((c - a))).v3Normalize();
 	}
 
-	bool Triangle::Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const
+	bool Triangle::Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const
 	{
-		F32 a = p1.x - p2.x, b = p1.x - p3.x, c = ray.GetDirection().getX(), d = p1.x - ray.GetOrigin().getX();
-		F32 e = p1.y - p2.y, f = p1.y - p3.y, g = ray.GetDirection().getY(), h = p1.y - ray.GetOrigin().getY();
-		F32 i = p1.z - p2.z, j = p1.z - p3.z, k = ray.GetDirection().getZ(), l = p1.z - ray.GetOrigin().getZ();
+		VML::VECTOR3F v1 = (elementTransform.position + VML::Vector(p1)).asVector3();
+		VML::VECTOR3F v2 = (elementTransform.position + VML::Vector(p2)).asVector3();
+		VML::VECTOR3F v3 = (elementTransform.position + VML::Vector(p3)).asVector3();
+
+		F32 a = v1.x - v2.x, b = v1.x - v3.x, c = ray.GetDirection().getX(), d = v1.x - ray.GetOrigin().getX();
+		F32 e = v1.y - v2.y, f = v1.y - v3.y, g = ray.GetDirection().getY(), h = v1.y - ray.GetOrigin().getY();
+		F32 i = v1.z - v2.z, j = v1.z - v3.z, k = ray.GetDirection().getZ(), l = v1.z - ray.GetOrigin().getZ();
 
 		F32 m = f * k - g * i;
 		F32 n = h * k - g * l;

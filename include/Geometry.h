@@ -2,6 +2,7 @@
 
 #include <VML.h>
 #include "Util.h"
+#include <Transform.h>
 
 namespace RE
 {
@@ -126,24 +127,22 @@ namespace RE
 		// @param [out] outHitInfo - A list of the intersection points.
 		// @param ray - The ray to check against.
 		// @return Does the ray intersect this geometry?
-		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const = 0;
+		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const = 0;
 	};
 
 	class Plane : public Geometry
 	{
 	public:
-		// Creates a plane with a point at (0, 0, 0) and a normal of (0, 0, 1).
+		// Creates a normal of (0, 0, 1).
 		Plane();
 
 		// Creates a plane.
-		// @param point - A point on the plane.
 		// @param normal - The normal of the plane.
-		Plane(const VML::VECTOR3F& point, const VML::VECTOR3F& normal);
+		Plane(const VML::VECTOR3F& normal);
 
 		// Creates a plane.
-		// @param point - A point on the plane.
 		// @param normal - The normal of the plane.
-		Plane(const VML::Vector& point, const VML::Vector& normal);
+		Plane(const VML::Vector& normal);
 
 		// Default destructor.
 		virtual ~Plane() = default;
@@ -152,10 +151,9 @@ namespace RE
 		// @param [out] outHitInfo - A list of the intersection points.
 		// @param ray - The ray to check against.
 		// @return Does the ray intersect this geometry?
-		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const;
+		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const;
 
 	protected:
-		VML::Vector point;
 		VML::Vector normal;
 	};
 
@@ -163,18 +161,12 @@ namespace RE
 	class Sphere : public Geometry
 	{
 	public:
-		// Creates a unit sphere at (0, 0, 0).
+		// Creates a unit sphere.
 		Sphere();
 		
 		// Creates a sphere.
-		// @param origin - The origin of the sphere.
 		// @param radius - The radius of the sphere.
-		Sphere(const VML::VECTOR3F& origin, F32 radius);
-
-		// Creates a sphere.
-		// @param origin - The origin of the sphere.
-		// @param radius - The radius of the sphere.
-		Sphere(const VML::Vector& origin, F32 radius);
+		Sphere(F32 radius);
 
 		// Default destructor.
 		virtual ~Sphere() = default;
@@ -183,13 +175,10 @@ namespace RE
 		// @param outHitInfo - Describes the point of intersection.
 		// @param ray - The ray to check against.
 		// @return Does the ray intersect this sphere?
-		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const override;
+		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const override;
 
 	protected:
-		VML::Vector origin;
 		F32 radius;
-
-		BoundingSphere boundingSphere;
 	};
 
 	class Triangle : public Geometry
@@ -203,7 +192,7 @@ namespace RE
 		// @param outHitInfo - Describes the point of intersection.
 		// @param ray - The ray to check against.
 		// @return Does the ray intersect this sphere?
-		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const override;
+		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const override;
 
 	private:
 		VML::VECTOR3F p1, p2, p3;

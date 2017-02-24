@@ -14,22 +14,19 @@ namespace RE
 
 		if (type == "sphere")
 		{
-			std::string oX, oY, oZ, radius;
-			iss >> oX >> oY >> oZ >> radius;
+			F32 radius;
+			iss >> radius;
 
-			VML::VECTOR3F origin(std::stof(oX), std::stof(oY), std::stof(oZ));
 			void *pAlignedMem = P4::AllocateAlignedMemory(sizeof(Sphere), 16);
-			return new(pAlignedMem)Sphere(origin, std::stof(radius));
+			return new(pAlignedMem)Sphere(radius);
 		}
 		else if (type == "plane")
 		{
-			std::string oX, oY, oZ, normalX, normalY, normalZ;
-			iss >> oX >> oY >> oZ >> normalX >> normalY >> normalZ;
+			VML::VECTOR3F normal;
+			iss >> normal.x >> normal.y >> normal.z;
 
-			VML::VECTOR3F origin(std::stof(oX), std::stof(oY), std::stof(oZ));
-			VML::VECTOR3F normal(std::stof(normalX), std::stof(normalY), std::stof(normalZ));
 			void *pAlignedMem = P4::AllocateAlignedMemory(sizeof(Plane), 16);
-			return new(pAlignedMem)Plane(origin, normal);
+			return new(pAlignedMem)Plane(normal);
 		}
 		else if (type == "tri")
 		{

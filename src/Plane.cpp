@@ -2,28 +2,24 @@
 
 namespace RE
 {
-	Plane::Plane()
+	Plane::Plane() : normal(0.0f, 0.0f, 1.0f, 0.0f)
 	{
-		this->point = VML::VectorZero();
-		this->normal = VML::Vector(0.0f, 0.0f, 1.0f, 0.0f);
 	}
 
-	Plane::Plane(const VML::VECTOR3F& point, const VML::VECTOR3F& normal)
+	Plane::Plane(const VML::VECTOR3F& normal) : normal(normal)
 	{
-		this->point = VML::Vector(point);
-		this->normal = VML::Vector(normal.x, normal.y, normal.z, 0.0f).v3Normalize();
+		this->normal.v3Normalize();
 	}
 
-	Plane::Plane(const VML::Vector& point, const VML::Vector& normal)
+	Plane::Plane(const VML::Vector& normal) : normal(normal)
 	{
-		this->point = VML::Vector(point);
-		this->normal = VML::Vector(normal).v3Normalize();
+		this->normal.v3Normalize();
 	}
 
-	bool Plane::Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const
+	bool Plane::Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const
 	{
 		F32 dn = ray.GetDirection().v3Dot(normal);
-		F32 num = (point - ray.GetOrigin()).v3Dot(normal);
+		F32 num = (elementTransform.position - ray.GetOrigin()).v3Dot(normal);
 
 		if (VML::FEquals(dn, 0.0f))
 			return false;

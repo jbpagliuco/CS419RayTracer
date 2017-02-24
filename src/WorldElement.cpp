@@ -64,13 +64,6 @@ namespace RE
 
 	void WorldElement::Destroy()
 	{
-		if (pGeometry)
-		{
-			P4::FreeAlignedMemory(pGeometry);
-			//delete pGeometry;
-			pGeometry = nullptr;
-		}
-
 		if (pMaterial)
 		{
 			delete pMaterial;

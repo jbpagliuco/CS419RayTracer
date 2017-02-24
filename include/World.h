@@ -4,6 +4,8 @@
 #include <Geometry.h>
 #include <Material.h>
 #include <Light.h>
+#include <Transform.h>
+#include <AssetManager.h>
 
 namespace RE
 {
@@ -16,6 +18,8 @@ namespace RE
 		Color color;
 		F32 depth;
 	};
+
+
 
 	// A renderable element (sphere, tri, etc)
 	class WorldElement
@@ -45,6 +49,7 @@ namespace RE
 	public:
 		std::string name;
 
+		Transform transform;
 		Geometry* pGeometry;
 		Material* pMaterial;
 	};
@@ -99,6 +104,9 @@ namespace RE
 		void CheckRayElementIntersections(ElementIntersection& out, const Ray& ray)const;
 		Color CalculateColor(const ElementIntersection& e)const;
 
+	public:
+		AssetManager assetManager;
+		
 	private:
 		Camera * pCamera;
 		std::vector<WorldElement*> elements;

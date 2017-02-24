@@ -44,23 +44,36 @@
     point 1.0 5.0 -3.0 900.0
     
     
+    
+    
+    
+@Geometry Sphere1     sphere 1.0
+@Geometry Sphere2     sphere 2.0
+@Geometry Sphere1.5   sphere 1.5
+    
+    
 tOrange
-    Geometry tri   -8.0 0.0 -2.0     -10.5 2.0 1.0      -5.0 -1.0 3.0
+    Transform   0.0 1.0 0.0
+    Geometry tri   -3.0 -3.0 0.0    3.0 -3.0 0.0   0.0 3.0 0.0
     Material 0.2   0.6 0.3 0.0 1.0   0.0 0.0 0.0 1.0    0.0
     
 sRed
-    Geometry sphere   0.0 -1.0 3.0   1.0
+    Transform 0.0 -1.0 3.0
+    Geometry @Sphere1
     Material 0.2   0.8 0.2 0.2 1.0   0.5 0.5 0.5 1.0    64.0
     
 sGreen
-    Geometry sphere   0.0 0.0 0.0   2.0
+    Transform 0.0 0.0 0.0
+    Geometry @Sphere2
     Material 0.2   0.0 0.7 0.0 1.0   0.5 0.5 0.5 1.0    64.0
     
 sBlue
-    Geometry sphere   0.0 -0.5 -3.5   1.5
+    Transform 0.0 -0.5 -3.5
+    Geometry @Sphere1.5
     Material 0.2   0.2 0.2 0.8 1.0   0.5 0.5 0.5 1.0    64.0
     
 floor
-    Geometry plane   0.0 -2.0 0.0   0.0 1.0 0.0
+    Transform 0.0 -2.0 0.0
+    Geometry plane   0.0 1.0 0.0
     Material 0.2   0.4 0.4 0.4 1.0   0.0 0.0 0.0 1.0    0.0
     

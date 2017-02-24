@@ -10,7 +10,7 @@
 
 namespace RE
 {
-	void LoadWorldElementComponent(WorldElement * pWorldElement, const std::string& line, U32 lineNum)
+	void LoadWorldElementComponent(WorldElement * pWorldElement, const std::string& line, U32 lineNum, World& world)
 	{
 		// Parse the line (don't need the whitespace on the ends)
 		std::istringstream iss(line);
@@ -18,11 +18,28 @@ namespace RE
 		std::string componentType;
 		iss >> componentType;
 
-		if (componentType == "Geometry")
+		if (componentType == "Transform")
 		{
-			Geometry * pGeo = CreateGeometryFromString(line);
-			if (!pGeo)
-				RE_LOGERROR(WORLD, INIT, "Invalid geometry specification: [Line " << lineNum << "] " << line);
+			pWorldElement->transform = CreateTransformFromString(line);
+		}
+		else if (componentType == "Geometry")
+		{
+			Geometry * pGeo;
+
+			std::string geoType;
+			iss >> geoType;
+			if (geoType[0] == '@')
+			{
+				pGeo = world.assetManager.GetGeometry(geoType.substr(1));
+			}
+			else
+			{
+				pGeo = CreateGeometryFromString(line);
+				if (!pGeo)
+					RE_LOGERROR(WORLD, INIT, "Invalid geometry specification: [Line " << lineNum << "] " << line);
+				world.assetManager.AddGeometry(pGeo);
+			}
+
 			pWorldElement->pGeometry = pGeo;
 		}
 		else if (componentType == "Material")
@@ -34,7 +51,7 @@ namespace RE
 		}
 	}
 
-	WorldElement* LoadWorldElement(std::ifstream& in, const std::string& name, U32& lineNum)
+	WorldElement* LoadWorldElement(std::ifstream& in, const std::string& name, U32& lineNum, World& world)
 	{
 		WorldElement * pWE = new WorldElement(name);
 
@@ -51,7 +68,7 @@ namespace RE
 				break;
 
 			// Otherwise, this line contains a component
-			LoadWorldElementComponent(pWE, line, lineNum);
+			LoadWorldElementComponent(pWE, line, lineNum, world);
 		}
 
 		return pWE;
@@ -213,11 +230,22 @@ namespace RE
 					// Load light
 					world.AddLight(LoadLight(in, lineNum));
 				}
+				else if (type == "@Geometry")
+				{
+					// Load named geometry
+					std::string name, geometryDesc;
+					ss >> name;
+					geometryDesc = trimmed.substr(std::string("Geometry").length() + 1);
+					Geometry * p = CreateGeometryFromString(geometryDesc);
+					world.assetManager.AddGeometry(name, p);
+				}
 			}
 			else if (!isspace(trimmed[0]))
 			{
 				// Load world element
-				WorldElement * pWE = LoadWorldElement(in, trimmed, lineNum);
+				WorldElement * pWE = LoadWorldElement(in, trimmed, lineNum, world);
+
+				// Add the element to the world
 				world.AddElement(pWE);
 			}
 		}

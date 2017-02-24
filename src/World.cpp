@@ -107,7 +107,7 @@ namespace RE
 			WorldElement* e = *it;
 
 			RayIntersectionList hitInfo;
-			bool bHit = e->pGeometry->Intersects(hitInfo, ray);
+			bool bHit = e->pGeometry->Intersects(hitInfo, ray, e->transform);
 			if (bHit)
 			{
 				RayIntersection r = hitInfo.closestIntersection;
