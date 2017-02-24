@@ -2,6 +2,7 @@
 
 #include <Util.h>
 #include <assert.h>
+#include <Color.h>
 
 namespace RE
 {

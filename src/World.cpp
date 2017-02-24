@@ -101,6 +101,8 @@ namespace RE
 	{
 		// Keep track of the closest element
 		F32 minDepth = 100000000.0f;
+		VML::Vector wo = ray.GetDirection();
+		wo.negate();
 
 		for (auto it = elements.begin(); it != elements.end(); it++)
 		{
@@ -116,8 +118,13 @@ namespace RE
 				F32 newDepth = r.t;
 				if (newDepth < minDepth)
 				{
+					// Check if we have to reverse the normal
+					if (r.normal.v3Dot(wo) < 0.0f)
+						r.normal.negate();
+
 					out.element = e;
 					out.rayInt = r;
+					out.ray = ray;
 					minDepth = newDepth;
 				}
 			}
@@ -127,38 +134,9 @@ namespace RE
 
 	Color World::CalculateColor(const ElementIntersection& e)const
 	{
-		Color out;
-		VML::Vector eyeDir = (pCamera->GetPosition() - e.rayInt.worldCoords).v3Normalize();
 		WorldElement *pElement = e.element;
-		Material *pMat = pElement->pMaterial;
-		VML::Vector p = e.rayInt.worldCoords;
+		Material *pMat = e.element->pMaterial;
 
-		for (auto it = lights.begin(); it != lights.end(); it++)
-		{
-			Light *pLight = *it;
-
-			// Are we in the shadow of this light?
-			VML::Vector dirToLight = pLight->GetDirectionFromPoint(p);
-			F32 distanceToLight = pLight->GetDistanceFromPoint(p);
-
-			ElementIntersection betweenPointAndLight;
-			CheckRayElementIntersections(betweenPointAndLight, Ray(p, dirToLight, F32(RAY_EPSILON)));
-
-			if (betweenPointAndLight.element && betweenPointAndLight.rayInt.t < distanceToLight)
-			{
-				// We are in a shadow
-
-			}
-			else
-			{
-				// Not in shadow
-				out += pLight->CalculatePhongLighting(e, eyeDir);
-			}
-		}
-		
-		// Add ambient light
-		out += pMat->GetDiffuseColor() * pMat->GetAmbient();
-
-		return out;
+		return pMat->Shade(e, *this);
 	}
 }

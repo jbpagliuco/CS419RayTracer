@@ -129,54 +129,58 @@ namespace RE
 
 
 
-	Light * LoadLight(std::ifstream& in, U32& lineNum)
+	void LoadLight(const std::string& line, U32& lineNum, World& world)
 	{
-		Color diffuse(0.0f, 0.0f, 0.0f, 1.0f);
-		Color specular(0.0f, 0.0f, 0.0f, 1.0f);
+		std::string trimmed = line;
+		RE::RemoveCapWhitespace(trimmed);
 
-		std::string line;
-		while (std::getline(in, line))
+		std::stringstream ss(trimmed);
+		std::string lightType;
+		ss >> lightType >> lightType;
+
+		if (lightType == "ambient")
 		{
-			lineNum++;
+			F32 ls;
+			Color color;
 
-			std::string trimmed = line;
-			RE::RemoveCapWhitespace(trimmed);
+			ss >> ls >> color.r >> color.g >> color.b;
+			color.a = 1.0f;
 
-			// If we're at an empty line
-			if (trimmed == "")
-				break;
-
-			std::stringstream ss(trimmed);
-			std::string paramName;
-			ss >> paramName;
-
-			if (paramName == "diffuse")
-				ss >> diffuse.r >> diffuse.g >> diffuse.b;
-			else if (paramName == "specular")
-				ss >> specular.r >> specular.g >> specular.b;
-			else if (paramName == "parallel")
-			{
-				VML::VECTOR4F direction;
-				ss >> direction.x >> direction.y >> direction.z;
-				direction.w = 0.0f;
-
-				void * pAlignedMem = P4::AllocateAlignedMemory(sizeof(ParallelLight), 16);
-				return new(pAlignedMem)ParallelLight(diffuse, specular, VML::Vector(direction));
-			}
-			else if (paramName == "point")
-			{
-				VML::VECTOR3F position;
-				F32 range;
-				ss >> position.x >> position.y >> position.z >> range;
-
-				void * pAlignedMem = P4::AllocateAlignedMemory(sizeof(PointLight), 16);
-				return new(pAlignedMem)PointLight(diffuse, specular, VML::Vector(position), range);
-			}
+			world.ambientLight = AmbientLight(ls, color);
 		}
+		else if (lightType == "parallel")
+		{
+			F32 ls;
+			Color color;
+			VML::VECTOR4F direction;
 
-		RE_LOG(WORLD, INIT, "Invalid light type on line " << lineNum);
+			ss >> ls >>
+				color.r >> color.g >> color.b >>
+				direction.x >> direction.y >> direction.z;
+			color.a = 1.0f;
+			direction.w = 0.0f;
 
-		return nullptr;
+
+			void * pAlignedMem = P4::AllocateAlignedMemory(sizeof(ParallelLight), 16);
+			ParallelLight* p = new(pAlignedMem)ParallelLight(ls, color, VML::Vector(direction));
+			world.AddLight(p);
+		}
+		else if (lightType == "point")
+		{
+			F32 ls;
+			Color color;
+			VML::VECTOR3F position;
+				
+			ss >> ls >>
+				color.r >> color.g >> color.b >>
+				position.x >> position.y >> position.z;
+
+			void * pAlignedMem = P4::AllocateAlignedMemory(sizeof(PointLight), 16);
+			PointLight* p = new(pAlignedMem)PointLight(ls, color, VML::Vector(position));
+			world.AddLight(p);
+		}
+		else
+			RE_LOG(WORLD, INIT, "Invalid light type on line " << lineNum);
 	}
 
 
@@ -228,7 +232,7 @@ namespace RE
 				else if (type == "@Light")
 				{
 					// Load light
-					world.AddLight(LoadLight(in, lineNum));
+					LoadLight(line, lineNum, world);
 				}
 				else if (type == "@Geometry")
 				{

@@ -2,6 +2,8 @@
 
 #include <sstream>
 
+#include <World.h>
+
 namespace RE
 {
 	Material::Material()
@@ -9,39 +11,16 @@ namespace RE
 
 	}
 
-	Material::Material(F32 ambient, Color diffuse, Color specular, F32 shininess)
-	{
-		this->ambient = ambient;
-		this->diffuse = diffuse;
-		this->specular = specular;
-		this->shininess = shininess;
-	}
-
 	Material::~Material()
 	{
 
 	}
-
-
-	F32 Material::GetAmbient()const
+	
+	Color Material::Shade(const ElementIntersection& ei, const World& world)
 	{
-		return ambient;
+		return Color();
 	}
 
-	Color Material::GetDiffuseColor()const
-	{
-		return diffuse;
-	}
-
-	Color Material::GetSpecularColor()const
-	{
-		return specular;
-	}
-
-	F32 Material::GetShininess()const
-	{
-		return shininess;
-	}
 
 
 
@@ -51,18 +30,18 @@ namespace RE
 	{
 		std::istringstream iss(desc);
 
-		std::string garbage;
-		iss >> garbage;
+		std::string type;
+		iss >> type >> type;
 
-		F32 ambient;
-		Color diffuse, specular;
-		F32 shininess;
+		if (type == "matte")
+		{
+			F32 ka, kd;
+			Color color;
+			iss >> ka >> kd >> color.r >> color.g >> color.b >> color.a;
 
-		iss >> ambient;
-		iss >> diffuse.r >> diffuse.g >> diffuse.b >> diffuse.a;
-		iss >> specular.r >> specular.g >> specular.b >> specular.a;
-		iss >> shininess;
+			return new Matte(ka, kd, color);
+		}
 
-		return new Material(ambient, diffuse, specular, shininess);
+		return nullptr;
 	}
 }

@@ -1,11 +1,11 @@
 ------------------------------------------------------------
-Elapsed Time: 4839104 usec (4.8391 sec) (0.0806517 min)
-Number of objects in world: 5
+Elapsed Time: 3349167 usec (3.34917 sec) (0.0558194 min)
+Number of objects in world: 4
 Number of lights in world: 2
 Number of samples per pixel: 1
 Total number of rays shot: 40000
 Render target stats: 
 	Resolution: 200x200
 	Total number of pixels rendered: 40000
-	Average time per pixel: 120.978 usec
+	Average time per pixel: 83.7292 usec
 ------------------------------------------------------------

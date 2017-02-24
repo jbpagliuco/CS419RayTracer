@@ -6,6 +6,7 @@
 #include <Light.h>
 #include <Transform.h>
 #include <AssetManager.h>
+#include <Color.h>
 
 namespace RE
 {
@@ -63,6 +64,7 @@ namespace RE
 
 		WorldElement * element;
 		RayIntersection rayInt;
+		Ray ray;
 	};
 
 
@@ -100,13 +102,15 @@ namespace RE
 		// @return Did the ray hit any objects?
 		bool TraceRay(RayTraceOutput& outTraceResult, const Ray& ray)const;
 
-	private:
 		void CheckRayElementIntersections(ElementIntersection& out, const Ray& ray)const;
+
+	private:
 		Color CalculateColor(const ElementIntersection& e)const;
 
 	public:
 		AssetManager assetManager;
-		
+		AmbientLight ambientLight;
+
 	private:
 		Camera * pCamera;
 		std::vector<WorldElement*> elements;

@@ -2,8 +2,10 @@
 #     Component Parameters...
 
 #### KEY
-# Geometry sphere originX originY originZ radius
-# Geometry plane originX originY originZ normalX normalY normalZ
+# Transform posX posY posZ
+#
+# Geometry sphere radius
+# Geometry plane normalX normalY normalZ
 # Geometry tri   p1x p1y p1z   p2x p2y p2z   p3x p3y p3z
 #
 # Material ambientFactor   diffuseR diffuseG diffuseB    specularR specularG specularB    shininess
@@ -12,9 +14,8 @@
 # @Camera ortho halfwidth
 # @Camera pinhole distanceToViewPlane zoom
 #
-# @Light diffuse, specular
-# @Light parallel dirX dirY dirZ
-# @Light point posX posY posZ   rangeSquared
+# @Light parallel ls   colorR colorG colorB   dirX dirY dirZ
+# @Light point  ls   colorR colorG colorB  posX posY posZ
 #
 # #####
 # RIGHT HANDED COORDINATE SYSTEM
@@ -24,56 +25,57 @@
 
 
 @Camera
-    pos 3.0 3.0 6.0
+    pos 10.0 4.0 0.0
     lookat 0.0 0.0 0.0
     up 0.0 1.0 0.0
     pinhole 1.0 2.0
 
     
     
-    
-
-@Light
-    diffuse 0.7 0.7 0.7
-    specular 1.0 1.0 1.0
-    parallel 0.0 1.0 0.0
-    
-@Light
-    diffuse 0.7 0.7 0.7
-    specular 1.0 1.0 1.0
-    point 1.0 5.0 -3.0 900.0
+# Lights
+@Light ambient  0.2   1.0 1.0 1.0
+#@Light parallel  0.7   1.0 1.0 1.0   2.0 1.0 0.0
+@Light point  1.0    1.0 1.0 1.0    4.0 6.0 -1.0
     
     
-    
-    
-    
+# Cache geometry
 @Geometry Sphere1     sphere 1.0
 @Geometry Sphere2     sphere 2.0
 @Geometry Sphere1.5   sphere 1.5
     
     
-tOrange
-    Transform   0.0 1.0 0.0
-    Geometry tri   -3.0 -3.0 0.0    3.0 -3.0 0.0   0.0 3.0 0.0
-    Material 0.2   0.6 0.3 0.0 1.0   0.0 0.0 0.0 1.0    0.0
-    
 sRed
     Transform 0.0 -1.0 3.0
     Geometry @Sphere1
-    Material 0.2   0.8 0.2 0.2 1.0   0.5 0.5 0.5 1.0    64.0
+    Material matte   0.4   2.0    1.0 0.0 0.0 1.0
     
 sGreen
     Transform 0.0 0.0 0.0
     Geometry @Sphere2
-    Material 0.2   0.0 0.7 0.0 1.0   0.5 0.5 0.5 1.0    64.0
+    Material matte   0.4   2.0    0.3 1.0 0.3 1.0
     
 sBlue
     Transform 0.0 -0.5 -3.5
     Geometry @Sphere1.5
-    Material 0.2   0.2 0.2 0.8 1.0   0.5 0.5 0.5 1.0    64.0
+    Material matte   0.4   2.0    0.0 0.0 1.0 1.0
     
 floor
     Transform 0.0 -2.0 0.0
     Geometry plane   0.0 1.0 0.0
-    Material 0.2   0.4 0.4 0.4 1.0   0.0 0.0 0.0 1.0    0.0
+    Material matte   0.2   1.5    1.0 1.0 1.0 1.0
+    
+leftWall
+    Transform 0.0 0.0 6.0
+    Geometry plane   0.0 0.0 -1.0
+    Material matte   0.2   1.5    1.0 1.0 1.0 1.0
+    
+rightWall
+    Transform 0.0 0.0 -6.0
+    Geometry plane   0.0 0.0 1.0
+    Material matte   0.2   1.5    1.0 1.0 1.0 1.0
+    
+backWall
+    Transform -3.0 0.0 0.0
+    Geometry plane   1.0 0.0 0.0
+    Material matte   0.2   1.5    1.0 1.0 1.0 1.0
     
