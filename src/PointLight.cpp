@@ -9,7 +9,7 @@ namespace RE
 
 	}
 
-	PointLight::PointLight(F32 ls, Color color, VML::Vector position) : ls(ls), color(color)
+	PointLight::PointLight(F32 ls, Color color, VML::Vector position, bool bCastsShadows) : ls(ls), color(color), Light(bCastsShadows)
 	{
 		this->position = position;
 	}
@@ -32,9 +32,8 @@ namespace RE
 
 
 
-	Color PointLight::CalculateRadiance(const ElementIntersection& ei)const
+	Color PointLight::CalculateRadiance(const ElementIntersection& ei, const World& world)
 	{
-		F32 d = GetDistanceFromPoint(ei.rayInt.worldCoords);
 		return color * ls;
 	}
 }

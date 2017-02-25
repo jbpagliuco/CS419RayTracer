@@ -39,4 +39,22 @@ namespace RE
 
 		return false;
 	}
+
+	bool Plane::Intersects(F32& tmin, const Ray& ray, const Transform& elementTransform)const
+	{
+		F32 dn = ray.GetDirection().v3Dot(normal);
+		F32 num = (elementTransform.position - ray.GetOrigin()).v3Dot(normal);
+
+		if (VML::FEquals(dn, 0.0f))
+			return false;
+
+		F32 t = num / dn;
+		if (t >= VML::FLOAT_EPSILON)
+		{
+			tmin = t;
+			return true;
+		}
+
+		return false;
+	}
 }

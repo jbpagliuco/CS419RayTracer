@@ -126,8 +126,16 @@ namespace RE
 		// Checks to see if a ray intersects this geometry.
 		// @param [out] outHitInfo - A list of the intersection points.
 		// @param ray - The ray to check against.
+		// @param elementTransform - The transform of the WorldElement that uses this geometry.
 		// @return Does the ray intersect this geometry?
 		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const = 0;
+
+		// Checks to see if a ray intersects this geometry, but doesn't calculate any normals, etc.
+		// @param [out] t - The t value for this ray, if there is an intersection point.
+		// @param ray - The ray to check against.
+		// @param elementTransform - The transform of the WorldElement that uses this geometry.
+		// @return Does the ray intersect this geometry?
+		virtual bool Intersects(F32& t, const Ray& ray, const Transform& elementTransform)const = 0;
 	};
 
 	class Plane : public Geometry
@@ -150,8 +158,16 @@ namespace RE
 		// Checks to see if a ray intersects this geometry.
 		// @param [out] outHitInfo - A list of the intersection points.
 		// @param ray - The ray to check against.
+		// @param elementTransform - The transform of the WorldElement that uses this geometry.
 		// @return Does the ray intersect this geometry?
 		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const;
+
+		// Checks to see if a ray intersects this geometry, but doesn't calculate any normals, etc.
+		// @param [out] tmin - The t value for this ray, if there is an intersection point.
+		// @param ray - The ray to check against.
+		// @param elementTransform - The transform of the WorldElement that uses this geometry.
+		// @return Does the ray intersect this geometry?
+		virtual bool Intersects(F32& tmin, const Ray& ray, const Transform& elementTransform)const override;
 
 	protected:
 		VML::Vector normal;
@@ -174,8 +190,16 @@ namespace RE
 		// Checks to see if a ray interects this sphere.
 		// @param outHitInfo - Describes the point of intersection.
 		// @param ray - The ray to check against.
+		// @param elementTransform - The transform of the WorldElement that uses this geometry.
 		// @return Does the ray intersect this sphere?
 		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const override;
+
+		// Checks to see if a ray intersects this geometry, but doesn't calculate any normals, etc.
+		// @param [out] tmin - The t value for this ray, if there is an intersection point.
+		// @param ray - The ray to check against.
+		// @param elementTransform - The transform of the WorldElement that uses this geometry.
+		// @return Does the ray intersect this geometry?
+		virtual bool Intersects(F32& tmin, const Ray& ray, const Transform& elementTransform)const override;
 
 	protected:
 		F32 radius;
@@ -191,8 +215,16 @@ namespace RE
 		// Checks to see if a ray interects this sphere.
 		// @param outHitInfo - Describes the point of intersection.
 		// @param ray - The ray to check against.
+		// @param elementTransform - The transform of the WorldElement that uses this geometry.
 		// @return Does the ray intersect this sphere?
 		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const override;
+
+		// Checks to see if a ray intersects this geometry, but doesn't calculate any normals, etc.
+		// @param [out] tmin - The t value for this ray, if there is an intersection point.
+		// @param ray - The ray to check against.
+		// @param elementTransform - The transform of the WorldElement that uses this geometry.
+		// @return Does the ray intersect this geometry?
+		virtual bool Intersects(F32& tmin, const Ray& ray, const Transform& elementTransform)const override;
 
 	private:
 		VML::VECTOR3F p1, p2, p3;

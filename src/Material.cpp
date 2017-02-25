@@ -16,7 +16,7 @@ namespace RE
 
 	}
 	
-	Color Material::Shade(const ElementIntersection& ei, const World& world)
+	Color Material::Shade(const ElementIntersection& ei, World& world)
 	{
 		return Color();
 	}

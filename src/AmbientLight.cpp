@@ -27,8 +27,13 @@ namespace RE
 		return VML::VectorZero();
 	}
 
-	Color AmbientLight::CalculateRadiance(const ElementIntersection& ei)const
+	Color AmbientLight::CalculateRadiance(const ElementIntersection& ei, const World& world)
 	{
 		return color * ls;
+	}
+
+	bool AmbientLight::InShadow(const Ray& ray, const ElementIntersection& ei, const World& world)const
+	{
+		return false;
 	}
 }

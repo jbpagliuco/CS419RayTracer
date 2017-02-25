@@ -28,6 +28,10 @@ namespace RE
 		// Unload the rendering engine components.
 		void Unload();
 
+	public:
+		static U32 NumSamples;
+		static SamplerGenerator SamplerFunc;
+
 	private:
 		Camera *pCamera;
 		Color bkgColor;

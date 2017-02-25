@@ -100,16 +100,17 @@ namespace RE
 		// @param [out] outTraceResult - The result of the ray trace.
 		// @param ray - The ray to trace.
 		// @return Did the ray hit any objects?
-		bool TraceRay(RayTraceOutput& outTraceResult, const Ray& ray)const;
+		bool TraceRay(RayTraceOutput& outTraceResult, const Ray& ray);
 
 		void CheckRayElementIntersections(ElementIntersection& out, const Ray& ray)const;
+		void CheckRayElementIntersections(bool& bHit, F32 d, const Ray& ray)const;
 
 	private:
-		Color CalculateColor(const ElementIntersection& e)const;
+		Color CalculateColor(const ElementIntersection& e);
 
 	public:
 		AssetManager assetManager;
-		AmbientLight ambientLight;
+		AmbientOccluder ambientLight;
 
 	private:
 		Camera * pCamera;

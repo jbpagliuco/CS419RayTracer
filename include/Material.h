@@ -16,7 +16,7 @@ namespace RE
 
 		virtual ~Material();
 
-		virtual Color Shade(const ElementIntersection& ei, const World& world);
+		virtual Color Shade(const ElementIntersection& ei, World& world);
 	};
 
 	class Matte : public Material
@@ -30,7 +30,7 @@ namespace RE
 
 		virtual ~Matte();
 
-		virtual Color Shade(const ElementIntersection& ei, const World& world)override;
+		virtual Color Shade(const ElementIntersection& ei, World& world)override;
 
 	private:
 		Lambertian ambientBRDF;
@@ -52,7 +52,7 @@ namespace RE
 
 		virtual ~Phong();
 
-		virtual Color Shade(const ElementIntersection& ei, const World& world)override;
+		virtual Color Shade(const ElementIntersection& ei, World& world)override;
 
 	private:
 		Lambertian ambientBRDF;

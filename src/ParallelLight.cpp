@@ -27,7 +27,7 @@ namespace RE
 		return direction;
 	}
 
-	Color ParallelLight::CalculateRadiance(const ElementIntersection& ei)const
+	Color ParallelLight::CalculateRadiance(const ElementIntersection& ei, const World& world)
 	{
 		return color * ls;
 	}

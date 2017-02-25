@@ -3,6 +3,7 @@
 #include <Util.h>
 #include <Material.h>
 #include <VML.h>
+#include <Geometry.h>
 
 namespace RE
 {
@@ -12,7 +13,7 @@ namespace RE
 	{
 	public:
 		// Constructor.
-		Light();
+		Light(bool bCastsShadows = true);
 
 		// Destructor.
 		virtual ~Light();
@@ -24,12 +25,20 @@ namespace RE
 
 		// Calculate the radiance at the incident point.
 		// @param ei - The incident point.
-		virtual Color CalculateRadiance(const ElementIntersection& ei)const = 0;
+		virtual Color CalculateRadiance(const ElementIntersection& ei, const World& world) = 0;
+
+		// Is this element in the shadow of this light?
+		// @param ray - The ray.
+		// @param ei - The intersection point.
+		virtual bool InShadow(const Ray& ray, const ElementIntersection& ei, const World& world)const;
+
+	protected:
+		bool bCastsShadows;
 	};
 
 
 	// Ambient light
-	RE_ALIGN_MS(16) class AmbientLight : public Light
+	class AmbientLight : public Light
 	{
 	public:
 		AmbientLight();
@@ -46,9 +55,48 @@ namespace RE
 
 		// Calculate the radiance at the incident point.
 		// @param ei - The incident point.
-		virtual Color CalculateRadiance(const ElementIntersection& ei)const override;
+		virtual Color CalculateRadiance(const ElementIntersection& ei, const World& world)override;
+
+		// Is this element in the shadow of this light?
+		// @param ray - The ray.
+		// @param ei - The intersection point.
+		virtual bool InShadow(const Ray& ray, const ElementIntersection& ei, const World& world)const override;
 
 	private:
+		Color color;
+		F32 ls;
+	};
+
+
+	// Ambient light
+	RE_ALIGN_MS(16) class AmbientOccluder : public Light
+	{
+	public:
+		AmbientOccluder();
+		// @param ls - The multiplicative factor.
+		// @param color - The color of this light.
+		// @param gen - The sampler generator function.
+		// @param minAmount - The 
+		AmbientOccluder(F32 ls, Color color, SamplerGenerator gen, U32 numSamples, F32 minAmount);
+
+		virtual ~AmbientOccluder();
+
+		// Returns the distance from the point to this light.
+		virtual F32 GetDistanceFromPoint(const VML::Vector& point)const;
+		// Returns the direction from the point to this light.
+		virtual VML::Vector GetDirectionFromPoint(const VML::Vector& point)const;
+
+		// Calculate the radiance at the incident point.
+		// @param ei - The incident point.
+		virtual Color CalculateRadiance(const ElementIntersection& ei, const World& world)override;
+
+	private:
+		virtual VML::Vector SampleDirection();
+
+	private:
+		VML::Vector u, v, w;
+		Sampler sampler;
+		F32 minAmount;
 		Color color;
 		F32 ls;
 	} RE_ALIGN_GCC(16);
@@ -75,7 +123,7 @@ namespace RE
 
 		// Calculate the radiance at the incident point.
 		// @param ei - The incident point.
-		virtual Color CalculateRadiance(const ElementIntersection& ei)const override;
+		virtual Color CalculateRadiance(const ElementIntersection& ei, const World& world)override;
 
 	protected:
 		VML::Vector direction;
@@ -93,7 +141,7 @@ namespace RE
 		// @param ls - The multiplicative factor.
 		// @param color - The color of this light.
 		// @param position - The position of this light.
-		PointLight(F32 ls, Color color, VML::Vector position);
+		PointLight(F32 ls, Color color, VML::Vector position, bool bCastsShadows);
 
 		virtual ~PointLight();
 
@@ -104,7 +152,7 @@ namespace RE
 
 		// Calculate the radiance at the incident point.
 		// @param ei - The incident point.
-		virtual Color CalculateRadiance(const ElementIntersection& ei)const override;
+		virtual Color CalculateRadiance(const ElementIntersection& ei, const World& world)override;
 	
 	protected:
 		VML::Vector position;

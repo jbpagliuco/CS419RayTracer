@@ -5,6 +5,9 @@
 
 namespace RE
 {
+	U32 RenderingEngine::NumSamples = 0;
+	SamplerGenerator RenderingEngine::SamplerFunc = RegularSampler;
+
 	RenderingEngine::RenderingEngine()
 	{
 		pWorld = nullptr;
@@ -29,11 +32,14 @@ namespace RE
 
 		config.importSettings(configFile);
 
+		SamplerFunc = GetSamplerGeneratorFromString(vpSamplerType);
+		NumSamples = numSamples;
+
 		// Create viewport
 		if (numSamples == 1)
 			vp = Viewport(resX, resY, RegularSampler, numSamples);
 		else
-			vp = Viewport(resX, resY, GetSamplerGeneratorFromString(vpSamplerType), numSamples);
+			vp = Viewport(resX, resY, SamplerFunc, numSamples);
 	}
 
 

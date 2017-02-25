@@ -79,7 +79,7 @@ namespace RE
 
 
 
-	bool World::TraceRay(RayTraceOutput& outTraceResult, const Ray& ray)const
+	bool World::TraceRay(RayTraceOutput& outTraceResult, const Ray& ray)
 	{
 		ElementIntersection closest;
 		CheckRayElementIntersections(closest, ray);
@@ -131,8 +131,28 @@ namespace RE
 		}
 	}
 
+	void World::CheckRayElementIntersections(bool& bHit, F32 d, const Ray& ray)const
+	{
+		// Keep track of the closest element
+		F32 minDepth = 100000000.0f;
+		VML::Vector wo = ray.GetDirection();
+		wo.negate();
 
-	Color World::CalculateColor(const ElementIntersection& e)const
+		for (auto it = elements.begin(); it != elements.end(); it++)
+		{
+			WorldElement* e = *it;
+
+			F32 t;
+			bHit = e->pGeometry->Intersects(t, ray, e->transform);
+			if (bHit && t < d)
+				return;
+		}
+
+		bHit = false;
+	}
+
+
+	Color World::CalculateColor(const ElementIntersection& e)
 	{
 		WorldElement *pElement = e.element;
 		Material *pMat = e.element->pMaterial;

@@ -68,6 +68,37 @@ namespace RE
 
 
 
+	void Sampler::MapSamplesToHemisphere(F32 p)
+	{
+		U64 size = samples.size();
+		samplesHemi.reserve(numSamples * numSets);
+
+		for (U64 j = 0; j < size; j++) {
+			F32 cos_phi = cosf(2.0f * VML::PI * samples[j].x);
+			F32 sin_phi = sinf(2.0f * VML::PI * samples[j].x);
+			F32 cos_theta = powf((1.0f - samples[j].y), 1.0f / (p + 1.0f));
+			F32 sin_theta = sqrtf(1.0f - cos_theta * cos_theta);
+			F32 pu = sin_theta * cos_phi;
+			F32 pv = sin_theta * sin_phi;
+			F32 pw = cos_theta;
+			samplesHemi.push_back(VML::VECTOR3F(pu, pv, pw));
+		}
+	}
+	
+	VML::VECTOR3F Sampler::SampleHemisphere()
+	{
+		if (count % numSamples == 0)
+			jump = (RandInt() % numSets) * numSamples;
+
+		return (samplesHemi[jump + shuffledIndices[jump + count++ % numSamples]]);
+	}
+
+
+
+
+
+
+
 
 
 

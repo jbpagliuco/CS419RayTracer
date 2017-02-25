@@ -14,12 +14,12 @@ namespace RE
 
 	}
 
-	Color Phong::Shade(const ElementIntersection& ei, const World& world)
+	Color Phong::Shade(const ElementIntersection& ei, World& world)
 	{
 		VML::Vector wo = ei.ray.GetDirection().negate();
 
 		// Add ambient light
-		Color color = ambientBRDF.Rho(ei, wo) * world.ambientLight.CalculateRadiance(ei);
+		Color color = ambientBRDF.Rho(ei, wo) * world.ambientLight.CalculateRadiance(ei, world);
 
 		// Add color from each light
 		auto lights = world.GetLights();
@@ -32,16 +32,12 @@ namespace RE
 			if (ndotwi > 0.0f)
 			{
 				Ray shadowRay(ei.rayInt.worldCoords, wi, RAY_EPSILON);
-				ElementIntersection shadowEI;
-				world.CheckRayElementIntersections(shadowEI, shadowRay);
+				bool bInShadow = light->InShadow(shadowRay, ei, world);
 
-				F32 distanceToLight = light->GetDistanceFromPoint(ei.rayInt.worldCoords);
-
-				bool bNotInShadow = !shadowEI.element || (shadowEI.rayInt.t >= distanceToLight);
-				if (bNotInShadow)
+				if (!bInShadow)
 				{
 					Color f = diffuseBRDF.F(ei, wi, wo) + specularBRDF.F(ei, wi, wo);
-					color += f * light->CalculateRadiance(ei) * ndotwi;
+					color += f * light->CalculateRadiance(ei, world) * ndotwi;
 				}
 			}
 		}

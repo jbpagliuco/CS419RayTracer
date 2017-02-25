@@ -7,6 +7,7 @@
 #include <P4Mem.h>
 #include <Camera.h>
 #include <Light.h>
+#include <RenderingEngine.h>
 
 namespace RE
 {
@@ -140,13 +141,13 @@ namespace RE
 
 		if (lightType == "ambient")
 		{
-			F32 ls;
+			F32 ls, minAmount;
 			Color color;
 
-			ss >> ls >> color.r >> color.g >> color.b;
+			ss >> ls >> color.r >> color.g >> color.b >> minAmount;
 			color.a = 1.0f;
 
-			world.ambientLight = AmbientLight(ls, color);
+			world.ambientLight = AmbientOccluder(ls, color, RenderingEngine::SamplerFunc, RenderingEngine::NumSamples, minAmount);
 		}
 		else if (lightType == "parallel")
 		{
@@ -170,13 +171,15 @@ namespace RE
 			F32 ls;
 			Color color;
 			VML::VECTOR3F position;
+			std::string castsShadows;
 				
 			ss >> ls >>
 				color.r >> color.g >> color.b >>
-				position.x >> position.y >> position.z;
+				position.x >> position.y >> position.z >>
+				castsShadows;
 
 			void * pAlignedMem = P4::AllocateAlignedMemory(sizeof(PointLight), 16);
-			PointLight* p = new(pAlignedMem)PointLight(ls, color, VML::Vector(position));
+			PointLight* p = new(pAlignedMem)PointLight(ls, color, VML::Vector(position), castsShadows == "true");
 			world.AddLight(p);
 		}
 		else

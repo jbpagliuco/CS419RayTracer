@@ -30,6 +30,10 @@ namespace RE
 		// Get the next sample on the unit square.
 		VML::VECTOR2F SampleUnitSquare();
 
+
+		void MapSamplesToHemisphere(F32 p);
+		VML::VECTOR3F SampleHemisphere();
+
 	private:
 		// Sets up the shuffled sampling indices
 		void SetupShuffledIndices();
@@ -44,6 +48,9 @@ namespace RE
 		std::vector<VML::VECTOR2F> samples;
 		// Shuffled samples array indices
 		std::vector<I32> shuffledIndices;
+
+		// Sample points on a unit hemisphere
+		std::vector<VML::VECTOR3F> samplesHemi;
 
 		// The current number of sample points used
 		U32 count;
