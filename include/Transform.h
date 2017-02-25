@@ -2,6 +2,7 @@
 
 #include <Util.h>
 #include <VML.h>
+#include <map>
 
 namespace RE
 {
@@ -24,5 +25,5 @@ namespace RE
 	} RE_ALIGN_GCC(16);
 
 
-	Transform CreateTransformFromString(const std::string& desc);
+	Transform LoadTransform(const std::string& params);
 }

@@ -26,7 +26,7 @@ namespace RE
 
 		renderingEngine.Initialize(reConfig);
 
-		RE::LoadWorldFromFile(world, worldFile);
+		world.LoadFromFile(worldFile);
 		
 		renderingEngine.SetWorld(&world);
 	}

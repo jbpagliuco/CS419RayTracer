@@ -27,14 +27,11 @@ namespace RE
 
 
 
-	Transform CreateTransformFromString(const std::string& desc)
+	Transform LoadTransform(const std::string& params)
 	{
-		std::string garbage;
+		std::stringstream ss(params);
+
 		VML::VECTOR3F position;
-
-		std::stringstream ss(desc);
-		ss >> garbage;
-
 		ss >> position.x >> position.y >> position.z;
 
 		return Transform(position);

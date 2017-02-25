@@ -45,6 +45,10 @@
 @Geometry Sphere1.5   sphere 1.5
 
 
+# Cache materials
+@Material mFloor    matte   0.2   1.0    1.0 0.0 1.0 1.0
+
+
     
 sGreen
     Transform 0.0 0.0 0.0
@@ -54,20 +58,20 @@ sGreen
 floor
     Transform 0.0 -2.0 0.0
     Geometry plane   0.0 1.0 0.0
-    Material matte   0.2   1.0    1.0 1.0 1.0 1.0
+    Material @mFloor
     
 #leftWall
 #    Transform 0.0 0.0 6.0
 #    Geometry plane   0.0 0.0 -1.0
-#    Material matte   0.2   1.5    1.0 1.0 1.0 1.0
+#    Material @mFloor
     
 rightWall
     Transform 0.0 0.0 -6.0
     Geometry plane   0.0 0.0 1.0
-    Material matte   0.2   1.5    1.0 1.0 1.0 1.0
+    Material @mFloor
     
 backWall
     Transform -3.0 0.0 0.0
     Geometry plane   1.0 0.0 0.0
-    Material matte   0.2   1.5    1.0 1.0 1.0 1.0
+    Material @mFloor
     

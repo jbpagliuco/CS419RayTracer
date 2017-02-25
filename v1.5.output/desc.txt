@@ -1,4 +1,5 @@
 - Ambient occlusion
 - Improved materials
-- caching geometry and referring to it by name in world file
+- caching geometry/material and referring to it by name in world file
 - BRDF's
+- Output filename in config file

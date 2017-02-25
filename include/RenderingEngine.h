@@ -40,5 +40,6 @@ namespace RE
 		World* pWorld;
 
 		std::string outputFolder;
+		std::string outputFilename;
 	};
 }

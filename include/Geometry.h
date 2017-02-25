@@ -3,6 +3,7 @@
 #include <VML.h>
 #include "Util.h"
 #include <Transform.h>
+#include <map>
 
 namespace RE
 {
@@ -231,5 +232,6 @@ namespace RE
 		VML::Vector normal;
 	};
 
-	Geometry * CreateGeometryFromString(const std::string& desc);
+	Geometry * LoadGeometry(const std::map<std::string, std::string>& params);
+	Geometry * LoadGeometry(const std::string& params);
 }

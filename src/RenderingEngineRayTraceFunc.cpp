@@ -61,10 +61,15 @@ namespace RE
 		_mkdir(outputFolder.c_str());
 
 		std::stringstream outputFileSS;
-		outputFileSS << outputFolder << "/result-" <<
-			width << "x" << height << "-" <<
-			numSamples << "SAMPLES" <<
-			".png";
+		if (outputFilename == "")
+		{
+			outputFileSS << outputFolder << "/result-" <<
+				width << "x" << height << "-" <<
+				numSamples << "SAMPLES" <<
+				".png";
+		}
+		else
+			outputFileSS << outputFolder << "/" << outputFilename;
 		RE_LOG(RENDER_ENG, RUNTIME, "Writing result image to " << outputFileSS.str());
 
 		result.SaveToImage(outputFileSS.str());

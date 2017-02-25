@@ -22,8 +22,9 @@ namespace RE
 		U32 resX, resY;
 		config.addSetting("res_x", &resX, P4_CR_U32);
 		config.addSetting("res_y", &resY, P4_CR_U32);
-		config.addSetting("bkg_color", &bkgColor, LoadColorFromConfigFile);		
+		config.addSetting("bkg_color", &bkgColor, LoadColorFromConfigFile);
 		config.addSetting("output_folder", &outputFolder, P4_CR_STRING);
+		config.addSetting("output_name", &outputFilename, P4_CR_STRING);
 
 		I32 numSamples;
 		std::string vpSamplerType;

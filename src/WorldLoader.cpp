@@ -1,145 +1,119 @@
 #include <World.h>
 
-#include <fstream>
 #include <Log.h>
-#include <Util.h>
-#include <cctype>
 #include <P4Mem.h>
 #include <Camera.h>
 #include <Light.h>
 #include <RenderingEngine.h>
 
+#include <WorldFileReader.h>
+
 namespace RE
 {
-	void LoadWorldElementComponent(WorldElement * pWorldElement, const std::string& line, U32 lineNum, World& world)
+	void LoadGeometry(const std::string& name, TypeParams params, U64 line, void* pWorld)
 	{
-		// Parse the line (don't need the whitespace on the ends)
-		std::istringstream iss(line);
-
-		std::string componentType;
-		iss >> componentType;
-
-		if (componentType == "Transform")
+		World * p = (World*)pWorld;
+		if (name != "")
 		{
-			pWorldElement->transform = CreateTransformFromString(line);
+			Geometry * pGeo = LoadGeometry(params);
+			p->assetManager.AddGeometry(name, pGeo);
 		}
-		else if (componentType == "Geometry")
+		else
 		{
-			Geometry * pGeo;
-
-			std::string geoType;
-			iss >> geoType;
-			if (geoType[0] == '@')
-			{
-				pGeo = world.assetManager.GetGeometry(geoType.substr(1));
-			}
-			else
-			{
-				pGeo = CreateGeometryFromString(line);
-				if (!pGeo)
-					RE_LOGERROR(WORLD, INIT, "Invalid geometry specification: [Line " << lineNum << "] " << line);
-				world.assetManager.AddGeometry(pGeo);
-			}
-
-			pWorldElement->pGeometry = pGeo;
-		}
-		else if (componentType == "Material")
-		{
-			Material * pMat = CreateMaterialFromString(line);
-			if (!pMat)
-				RE_LOGERROR(WORLD, INIT, "Invalid material specification: [Line " << lineNum << "] " << line);
-			pWorldElement->pMaterial = pMat;
+			
 		}
 	}
 
-	WorldElement* LoadWorldElement(std::ifstream& in, const std::string& name, U32& lineNum, World& world)
+	void LoadMaterial(const std::string& name, TypeParams params, U64 line, void* pWorld)
 	{
-		WorldElement * pWE = new WorldElement(name);
-
-		std::string line;
-		while (std::getline(in, line))
+		World * p = (World*)pWorld;
+		if (name != "")
 		{
-			lineNum++;
-
-			std::string trimmed = line;
-			RE::RemoveCapWhitespace(trimmed);
-
-			// If we're at an empty line
-			if (trimmed == "")
-				break;
-
-			// Otherwise, this line contains a component
-			LoadWorldElementComponent(pWE, line, lineNum, world);
+			Material * pMat = LoadMaterial(params);
+			p->assetManager.AddMaterial(name, pMat);
 		}
+		else
+		{
 
-		return pWE;
+		}
 	}
 
-
-
-	Camera * LoadCamera(std::ifstream& in, U32& lineNum)
+	void LoadWorldElement(const std::string& name, TypeParams params, U64 line, void* pWorld)
 	{
-		VML::VECTOR3F eyePos, lookat, up;
-
-		std::string line;
-		while (std::getline(in, line))
+		World * p = (World*)pWorld;
+		
+		WorldElement e(name);
+		e.transform = LoadTransform(params["Transform"]);
+		
+		std::string geometry = params["Geometry"];
+		if (geometry[0] == '@')
+			e.pGeometry = p->assetManager.GetGeometry(geometry.substr(1));
+		else
 		{
-			lineNum++;
-
-			std::string trimmed = line;
-			RE::RemoveCapWhitespace(trimmed);
-
-			// If we're at an empty line
-			if (trimmed == "")
-				break;
-
-			std::stringstream ss(trimmed);
-			std::string paramName;
-			ss >> paramName;
-
-			if (paramName == "pos")
-				ss >> eyePos.x >> eyePos.y >> eyePos.z;
-			else if (paramName == "lookat")
-				ss >> lookat.x >> lookat.y >> lookat.z;
-			else if (paramName == "up")
-				ss >> up.x >> up.y >> up.z;
-			else if (paramName == "ortho")
-			{
-				F32 halfWidth;
-				ss >> halfWidth;
-
-				void * pAlignedMem = P4::AllocateAlignedMemory(sizeof(OrthographicCamera), 16);
-				return new(pAlignedMem)OrthographicCamera(eyePos, lookat, up, halfWidth);
-			}
-			else if (paramName == "pinhole")
-			{
-				F32 distanceToViewPlane, pwScale;
-				ss >> distanceToViewPlane >> pwScale;
-
-				void * pAlignedMem = P4::AllocateAlignedMemory(sizeof(PinholeCamera), 16);
-				return new(pAlignedMem)PinholeCamera(eyePos, lookat, up, distanceToViewPlane, pwScale);
-			}
+			e.pGeometry = LoadGeometry(geometry);
+			p->assetManager.AddGeometry(e.pGeometry);
 		}
 
-		RE_LOG(WORLD, INIT, "Invalid camera type on line " << lineNum);
+		std::string material = params["Material"];
+		if (material[0] == '@')
+			e.pMaterial = p->assetManager.GetMaterial(material.substr(1));
+		else
+		{
+			e.pMaterial = LoadMaterial(material);
+			p->assetManager.AddMaterial(e.pMaterial);
+		}
 
-		return nullptr;
+		p->AddElement(e);
 	}
 
-
-
-
-
-	void LoadLight(const std::string& line, U32& lineNum, World& world)
+	void LoadCamera(const std::string& name, TypeParams params, U64 line, void* pWorld)
 	{
-		std::string trimmed = line;
-		RE::RemoveCapWhitespace(trimmed);
+		World * p = (World*)pWorld;
 
-		std::stringstream ss(trimmed);
-		std::string lightType;
-		ss >> lightType >> lightType;
+		VML::VECTOR3F pos, lookat, up;
+		
+		std::stringstream ss(params["pos"]);
+		ss >> pos.x >> pos.y >> pos.z;
+		
+		ss = std::stringstream(params["lookat"]);
+		ss >> lookat.x >> lookat.y >> lookat.z;
 
-		if (lightType == "ambient")
+		ss = std::stringstream(params["up"]);
+		ss >> up.x >> up.y >> up.z;
+		
+		std::string type;
+		ss = std::stringstream(params["type"]);
+		ss >> type;
+
+		Camera * pCamera;
+		if (type == "ortho")
+		{
+			F32 halfWidth;
+			ss >> halfWidth;
+
+			void * pAlignedMem = P4::AllocateAlignedMemory(sizeof(OrthographicCamera), 16);
+			pCamera = new(pAlignedMem)OrthographicCamera(pos, lookat, up, halfWidth);
+		}
+		else// if (type == "pinhole")
+		{
+			F32 distanceToViewPlane, pwScale;
+			ss >> distanceToViewPlane >> pwScale;
+
+			void * pAlignedMem = P4::AllocateAlignedMemory(sizeof(PinholeCamera), 16);
+			pCamera = new(pAlignedMem)PinholeCamera(pos, lookat, up, distanceToViewPlane, pwScale);
+		}
+
+		p->SetCamera(pCamera);
+	}
+
+	void LoadLight(const std::string& name, TypeParams params, U64 line, void* pWorld)
+	{
+		World * p = (World*)pWorld;
+		
+		std::string type = params["type"];
+		std::stringstream ss(params["params"]);
+	
+		if (type == "ambient")
 		{
 			F32 ls, minAmount;
 			Color color;
@@ -147,9 +121,9 @@ namespace RE
 			ss >> ls >> color.r >> color.g >> color.b >> minAmount;
 			color.a = 1.0f;
 
-			world.ambientLight = AmbientOccluder(ls, color, RenderingEngine::SamplerFunc, RenderingEngine::NumSamples, minAmount);
+			p->ambientLight = AmbientOccluder(ls, color, RE::RenderingEngine::SamplerFunc, RE::RenderingEngine::NumSamples, minAmount);
 		}
-		else if (lightType == "parallel")
+		else if (type == "parallel")
 		{
 			F32 ls;
 			Color color;
@@ -163,98 +137,41 @@ namespace RE
 
 
 			void * pAlignedMem = P4::AllocateAlignedMemory(sizeof(ParallelLight), 16);
-			ParallelLight* p = new(pAlignedMem)ParallelLight(ls, color, VML::Vector(direction));
-			world.AddLight(p);
+			ParallelLight* light = new(pAlignedMem)ParallelLight(ls, color, VML::Vector(direction));
+			p->AddLight(light);
 		}
-		else if (lightType == "point")
+		else if (type == "point")
 		{
 			F32 ls;
 			Color color;
 			VML::VECTOR3F position;
 			std::string castsShadows;
-				
+
 			ss >> ls >>
 				color.r >> color.g >> color.b >>
 				position.x >> position.y >> position.z >>
 				castsShadows;
 
 			void * pAlignedMem = P4::AllocateAlignedMemory(sizeof(PointLight), 16);
-			PointLight* p = new(pAlignedMem)PointLight(ls, color, VML::Vector(position), castsShadows == "true");
-			world.AddLight(p);
+			PointLight* light = new(pAlignedMem)PointLight(ls, color, VML::Vector(position), castsShadows == "true");
+			p->AddLight(light);
 		}
-		else
-			RE_LOG(WORLD, INIT, "Invalid light type on line " << lineNum);
 	}
 
 
-	
 
 
 
-	void LoadWorldFromFile(World& world, const std::string& file)
+	void World::LoadFromFile(const std::string& file)
 	{
-		RE_LOG(WORLD, INIT, "Loading world");
-		std::ifstream in(file);
+		WorldFileReader wfr;
 
-		if (!in.is_open())
-		{
-			RE_LOG(WORLD, ERROR, "Could not open world file: " << file);
-			return;
-		}
+		wfr.AddRule("Geometry", std::vector<std::string>({ "type", "params" }), LoadGeometry);
+		wfr.AddRule("Material", std::vector<std::string>({ "type", "params" }), LoadMaterial);
+		wfr.AddRule("WorldElement", std::vector<std::string>({ "Transform", "Geometry", "Material" }), LoadWorldElement);
+		wfr.AddRule("Camera", std::vector<std::string>({ "pos", "lookat", "up", "type" }), LoadCamera);
+		wfr.AddRule("Light", std::vector<std::string>({ "type", "params" }), LoadLight);
 
-		std::string line;
-		U32 lineNum = 0;
-		while (std::getline(in, line))
-		{
-			lineNum++;
-
-			std::string trimmed = line;
-			RE::RemoveCapWhitespace(trimmed);
-
-			// If we're at an empty line
-			if (trimmed == "")
-				continue;
-
-			// Check first character
-			// # - Comment, skip
-			// @ - Special world element, ie camera/light
-			// Not space - World element
-			if (trimmed[0] == '#')
-				continue;
-			else if (trimmed[0] == '@')
-			{
-				std::stringstream ss(line);
-				std::string type;
-				ss >> type;
-
-				if (type == "@Camera")
-				{
-					// Load camera
-					world.SetCamera(LoadCamera(in, lineNum));
-				}
-				else if (type == "@Light")
-				{
-					// Load light
-					LoadLight(line, lineNum, world);
-				}
-				else if (type == "@Geometry")
-				{
-					// Load named geometry
-					std::string name, geometryDesc;
-					ss >> name;
-					geometryDesc = trimmed.substr(std::string("Geometry").length() + 1);
-					Geometry * p = CreateGeometryFromString(geometryDesc);
-					world.assetManager.AddGeometry(name, p);
-				}
-			}
-			else if (!isspace(trimmed[0]))
-			{
-				// Load world element
-				WorldElement * pWE = LoadWorldElement(in, trimmed, lineNum, world);
-
-				// Add the element to the world
-				world.AddElement(pWE);
-			}
-		}
+		wfr.ReadFromFile(file, this);
 	}
 }

@@ -9,25 +9,18 @@ namespace RE
 {
 	World::World()
 	{
-		elements = std::vector<WorldElement*>();
+		elements = std::vector<WorldElement>();
 		lights = std::vector<Light*>();
 	}
 
-	void World::AddElement(WorldElement* pElement)
+	void World::AddElement(const WorldElement& element)
 	{
-		elements.push_back(pElement);
+		elements.push_back(element);
 	}
 
 	void World::DestroyWorld()
 	{
 		RE_LOG(ENGINE, END, "Destroying world");
-
-		// Destroy elements
-		for (auto it = elements.begin(); it != elements.end(); it++)
-		{
-			WorldElement * p = *it;
-			delete p;
-		}
 
 		// Destroy camera
 		if (pCamera)
@@ -47,7 +40,7 @@ namespace RE
 		}
 	}
 
-	const std::vector<WorldElement*>& World::GetWorldElements()const
+	const std::vector<WorldElement>& World::GetWorldElements()const
 	{
 		return elements;
 	}
@@ -84,7 +77,7 @@ namespace RE
 		ElementIntersection closest;
 		CheckRayElementIntersections(closest, ray);
 
-		if (closest.element)
+		if (closest.bHit)
 		{
 			outTraceResult.color = CalculateColor(closest);
 
@@ -106,10 +99,10 @@ namespace RE
 
 		for (auto it = elements.begin(); it != elements.end(); it++)
 		{
-			WorldElement* e = *it;
+			WorldElement e = *it;
 
 			RayIntersectionList hitInfo;
-			bool bHit = e->pGeometry->Intersects(hitInfo, ray, e->transform);
+			bool bHit = e.pGeometry->Intersects(hitInfo, ray, e.transform);
 			if (bHit)
 			{
 				RayIntersection r = hitInfo.closestIntersection;
@@ -122,6 +115,7 @@ namespace RE
 					if (r.normal.v3Dot(wo) < 0.0f)
 						r.normal.negate();
 
+					out.bHit = true;
 					out.element = e;
 					out.rayInt = r;
 					out.ray = ray;
@@ -140,10 +134,10 @@ namespace RE
 
 		for (auto it = elements.begin(); it != elements.end(); it++)
 		{
-			WorldElement* e = *it;
+			WorldElement e = *it;
 
 			F32 t;
-			bHit = e->pGeometry->Intersects(t, ray, e->transform);
+			bHit = e.pGeometry->Intersects(t, ray, e.transform);
 			if (bHit && t < d)
 				return;
 		}
@@ -154,8 +148,8 @@ namespace RE
 
 	Color World::CalculateColor(const ElementIntersection& e)
 	{
-		WorldElement *pElement = e.element;
-		Material *pMat = e.element->pMaterial;
+		WorldElement element = e.element;
+		Material *pMat = element.pMaterial;
 
 		return pMat->Shade(e, *this);
 	}

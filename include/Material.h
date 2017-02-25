@@ -3,6 +3,7 @@
 #include <Util.h>
 #include <Color.h>
 #include <BRDF.h>
+#include <map>
 
 namespace RE
 {
@@ -60,5 +61,6 @@ namespace RE
 		GlossySpecular specularBRDF;
 	};
 
-	Material * CreateMaterialFromString(const std::string& desc);
+	Material * LoadMaterial(const std::map<std::string, std::string>& params);
+	Material * LoadMaterial(const std::string& params);
 }

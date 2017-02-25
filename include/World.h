@@ -23,29 +23,12 @@ namespace RE
 
 
 	// A renderable element (sphere, tri, etc)
-	class WorldElement
+	struct WorldElement
 	{
-	public:
+		WorldElement() {}
 		// Constructor.
 		// @param name - The name of the world element.
-		WorldElement(const std::string& name);
-		
-		// Copy constructor
-		WorldElement(const WorldElement& other);
-		// Move constructor.
-		WorldElement(WorldElement&& other);
-
-		// Destructor.
-		~WorldElement();
-
-		// Assignment operator.
-		WorldElement& operator=(const WorldElement& other);
-		WorldElement& operator=(WorldElement&& other);
-
-
-	private:
-		void Copy(const WorldElement& other);
-		void Destroy();
+		WorldElement(const std::string& name) : name(name) {}
 
 	public:
 		std::string name;
@@ -60,9 +43,10 @@ namespace RE
 	// Output of a ray trace intersection
 	struct ElementIntersection
 	{
-		ElementIntersection() : element(nullptr) { }
+		ElementIntersection() : bHit(false) { }
 
-		WorldElement * element;
+		bool bHit;
+		WorldElement element;
 		RayIntersection rayInt;
 		Ray ray;
 	};
@@ -75,14 +59,16 @@ namespace RE
 		// Constructor.
 		World();
 
+		void LoadFromFile(const std::string& file);
+
 		// Adds an element to the world.
-		// @param pElement - A pointer to the element to add.
-		void AddElement(WorldElement* pElement);
+		// @param element - The element to add.
+		void AddElement(const WorldElement& element);
 		// Destroys the world.
 		void DestroyWorld();
 
 		// Gets a list of all the elements in the world.
-		const std::vector<WorldElement*>& GetWorldElements()const;
+		const std::vector<WorldElement>& GetWorldElements()const;
 
 		// Sets the camera to render from.
 		// @param pCamera - A pointer to the camera.
@@ -114,7 +100,7 @@ namespace RE
 
 	private:
 		Camera * pCamera;
-		std::vector<WorldElement*> elements;
+		std::vector<WorldElement> elements;
 		std::vector<Light*> lights;
 	};
 
