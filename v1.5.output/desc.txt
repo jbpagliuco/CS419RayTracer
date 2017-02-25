@@ -1,0 +1,4 @@
+- Ambient occlusion
+- Improved materials
+- caching geometry and referring to it by name in world file
+- BRDF's
