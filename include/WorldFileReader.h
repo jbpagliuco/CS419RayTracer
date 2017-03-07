@@ -6,7 +6,7 @@
 #include "Util.h"
 
 typedef std::map<std::string, std::string> TypeParams;
-typedef void (*TypeRuleCB)(const std::string&, TypeParams, RE::U64, void* pWorld);
+typedef void (*TypeRuleCB)(const std::string&, TypeParams, void* pWorld);
 
 struct Type
 {

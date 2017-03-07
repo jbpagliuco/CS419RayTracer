@@ -5,6 +5,11 @@
 
 namespace RE
 {
+	bool Geometry::HasBounds()const
+	{
+		return true;
+	}
+
 	Geometry * LoadGeometry(const std::map<std::string, std::string>& params)
 	{
 		std::string type = params.at("type");
@@ -36,6 +41,17 @@ namespace RE
 
 			void *pAlignedMem = P4::AllocateAlignedMemory(sizeof(Triangle), 16);
 			return new(pAlignedMem)Triangle(p1, p2, p3);
+		}
+		else if (type == "disk")
+		{
+			F32 radius;
+			VML::VECTOR3F normal;
+
+			ss >> radius
+				>> normal.x >> normal.y >> normal.z;
+
+			void *pAlignedMem = P4::AllocateAlignedMemory(sizeof(Disk), 16);
+			return new(pAlignedMem)Disk(radius, normal);
 		}
 
 		return nullptr;

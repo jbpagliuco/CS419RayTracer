@@ -62,4 +62,13 @@ namespace RE
 
 		return false;
 	}
+
+
+
+	BoundingBox Sphere::GetBoundingBox()const
+	{
+		VML::VECTOR3F min(-radius, -radius, -radius);
+		VML::VECTOR3F max(radius, radius, radius);
+		return BoundingBox(min, max);
+	}
 }

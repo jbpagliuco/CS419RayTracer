@@ -7,6 +7,7 @@
 #include <Transform.h>
 #include <AssetManager.h>
 #include <Color.h>
+#include <Grid.h>
 
 namespace RE
 {
@@ -19,7 +20,6 @@ namespace RE
 		Color color;
 		F32 depth;
 	};
-
 
 
 	// A renderable element (sphere, tri, etc)
@@ -37,8 +37,7 @@ namespace RE
 		Geometry* pGeometry;
 		Material* pMaterial;
 	};
-
-
+	
 
 	// Output of a ray trace intersection
 	struct ElementIntersection
@@ -102,10 +101,8 @@ namespace RE
 		Camera * pCamera;
 		std::vector<WorldElement> elements;
 		std::vector<Light*> lights;
+
+		RegularGrid grid;
 	};
 
-	// Loads a world from a file.
-	// @param [out] outWorld - A reference to the world.
-	// @param file - The name of the world desc file.
-	void LoadWorldFromFile(World& outWorld, const std::string& file);
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#define NOMINMAX
+
 #include <stdint.h>
 #include <string>
 #include <vector>
@@ -43,6 +45,24 @@ namespace RE
 
 	typedef float F32;
 	typedef long double D64;
+
+	// Single precision infinity
+	const F32 F32_INF = std::numeric_limits<F32>::infinity();
+	// Largest positive single precision value
+	const F32 F32_MAX = (std::numeric_limits<F32>::max)();
+	// Smallest negative single precision value
+	const F32 F32_NMAX = -F32_MAX;
+	// Smallest positive single precision value
+	const F32 F32_MIN = (std::numeric_limits<F32>::min)();
+
+	// Double precision infinity
+	const D64 D64_INF = std::numeric_limits<D64>::infinity();
+	// Largest positive double precision value
+	const D64 D64_MAX = (std::numeric_limits<D64>::max)();
+	// Smallest negative double precision value
+	const D64 D64_NMAX = -D64_MAX;
+	// Smallest positive double precision value
+	const D64 D64_MIN = (std::numeric_limits<D64>::min)();
 
 	const D64 INV_PI = 0.31830988618379067154;
 
@@ -102,7 +122,8 @@ namespace RE
 	// Calculates time difference.
 	U64 DiffTime(const std::chrono::high_resolution_clock::time_point& start, const std::chrono::high_resolution_clock::time_point& end);
 
-
+	template<typename T>
+	T Clamp(const T& val, const T& min, const T& max);
 
 	I32 RandInt();
 	I32 RandInt(I32 l, I32 h);
@@ -112,6 +133,15 @@ namespace RE
 
 
 
+
+
+
+
+	template<typename T>
+	T Clamp(const T& val, const T& min, const T& max)
+	{
+		return (val < min) ? min : (val > max) ? max : val;
+	}
 
 
 

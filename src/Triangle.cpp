@@ -1,5 +1,7 @@
 #include <Geometry.h>
 
+#include <algorithm>
+
 namespace RE
 {
 	Triangle::Triangle()
@@ -121,5 +123,21 @@ namespace RE
 
 		tmin = t;
 		return true;
+	}
+
+
+	BoundingBox Triangle::GetBoundingBox()const
+	{
+		VML::VECTOR3F min(
+			std::min(p1.x, std::min(p2.x, p3.x)),
+			std::min(p1.y, std::min(p2.y, p3.y)),
+			std::min(p1.z, std::min(p2.z, p3.z)));
+		
+		VML::VECTOR3F max(
+			std::max(p1.x, std::max(p2.x, p3.x)),
+			std::max(p1.y, std::max(p2.y, p3.y)),
+			std::max(p1.z, std::max(p2.z, p3.z)));
+
+		return BoundingBox(min, max);
 	}
 }

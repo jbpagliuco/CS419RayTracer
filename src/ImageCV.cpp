@@ -19,9 +19,9 @@ namespace RE
 #ifndef HIDE_OPENCV
 		img = cv::Mat(height, width, CV_8UC4);
 
-		for (int row = 0; row < height; row++)
+		for (U32 row = 0; row < height; row++)
 		{
-			for (int col = 0; col < width; col++)
+			for (U32 col = 0; col < width; col++)
 			{
 				ColorU8 cu8 = colorBuffer->operator()(row, col).ToColorU8();
 				cv::Vec4b v(cu8.b, cu8.g, cu8.r, cu8.a);

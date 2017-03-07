@@ -112,11 +112,8 @@ void WorldFileReader::ReadFromFile(const std::string& file, void * pWorld)
 	}
 
 	std::string line;
-	RE::U64 lineNum = 0;
 	while (std::getline(in, line))
 	{
-		lineNum++;
-
 		std::string trimmed = line;
 		RE::RemoveCapWhitespace(trimmed);
 
@@ -143,7 +140,7 @@ void WorldFileReader::ReadFromFile(const std::string& file, void * pWorld)
 		{
 			Type t = rules[first];
 			TypeParams p = ReadParams(t, in, ss);
-			t.callback(name, p, lineNum, pWorld);
+			t.callback(name, p, pWorld);
 		}
 	}
 

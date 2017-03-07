@@ -17,7 +17,7 @@ namespace RE
 
 	Color Lambertian::F(const ElementIntersection& ei, const VML::Vector& wi, const VML::Vector& wo)const
 	{
-		return cd * kd * INV_PI;
+		return cd * kd * (F32)INV_PI;
 	}
 
 	Color Lambertian::SampleF(const ElementIntersection& ei, const VML::Vector& wi, const VML::Vector& wo)const

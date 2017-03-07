@@ -36,7 +36,7 @@ namespace RE
 		// Other stats
 		U64 numWorldElements = pWorld->GetWorldElements().size();
 		U64 numPrimaryRays = numSamples * width * height;
-		U32 numLights = pWorld->GetLights().size();
+		U64 numLights = pWorld->GetLights().size();
 
 		std::stringstream ss;
 		ss <<

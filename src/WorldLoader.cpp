@@ -10,7 +10,7 @@
 
 namespace RE
 {
-	void LoadGeometry(const std::string& name, TypeParams params, U64 line, void* pWorld)
+	void LoadGeometry(const std::string& name, TypeParams params, void* pWorld)
 	{
 		World * p = (World*)pWorld;
 		if (name != "")
@@ -24,7 +24,7 @@ namespace RE
 		}
 	}
 
-	void LoadMaterial(const std::string& name, TypeParams params, U64 line, void* pWorld)
+	void LoadMaterial(const std::string& name, TypeParams params, void* pWorld)
 	{
 		World * p = (World*)pWorld;
 		if (name != "")
@@ -38,7 +38,7 @@ namespace RE
 		}
 	}
 
-	void LoadWorldElement(const std::string& name, TypeParams params, U64 line, void* pWorld)
+	void LoadWorldElement(const std::string& name, TypeParams params, void* pWorld)
 	{
 		World * p = (World*)pWorld;
 		
@@ -66,7 +66,7 @@ namespace RE
 		p->AddElement(e);
 	}
 
-	void LoadCamera(const std::string& name, TypeParams params, U64 line, void* pWorld)
+	void LoadCamera(const std::string& name, TypeParams params, void* pWorld)
 	{
 		World * p = (World*)pWorld;
 
@@ -106,7 +106,7 @@ namespace RE
 		p->SetCamera(pCamera);
 	}
 
-	void LoadLight(const std::string& name, TypeParams params, U64 line, void* pWorld)
+	void LoadLight(const std::string& name, TypeParams params, void* pWorld)
 	{
 		World * p = (World*)pWorld;
 		
@@ -134,7 +134,6 @@ namespace RE
 				direction.x >> direction.y >> direction.z;
 			color.a = 1.0f;
 			direction.w = 0.0f;
-
 
 			void * pAlignedMem = P4::AllocateAlignedMemory(sizeof(ParallelLight), 16);
 			ParallelLight* light = new(pAlignedMem)ParallelLight(ls, color, VML::Vector(direction));
@@ -173,5 +172,7 @@ namespace RE
 		wfr.AddRule("Light", std::vector<std::string>({ "type", "params" }), LoadLight);
 
 		wfr.ReadFromFile(file, this);
+
+		grid.AddObjects(elements);
 	}
 }

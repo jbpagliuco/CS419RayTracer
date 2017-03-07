@@ -87,62 +87,14 @@ namespace RE
 		return false;
 	}
 
-
-
-
 	void World::CheckRayElementIntersections(ElementIntersection& out, const Ray& ray)const
 	{
-		// Keep track of the closest element
-		F32 minDepth = 100000000.0f;
-		VML::Vector wo = ray.GetDirection();
-		wo.negate();
-
-		for (auto it = elements.begin(); it != elements.end(); it++)
-		{
-			WorldElement e = *it;
-
-			RayIntersectionList hitInfo;
-			bool bHit = e.pGeometry->Intersects(hitInfo, ray, e.transform);
-			if (bHit)
-			{
-				RayIntersection r = hitInfo.closestIntersection;
-
-				// Depth test
-				F32 newDepth = r.t;
-				if (newDepth < minDepth)
-				{
-					// Check if we have to reverse the normal
-					if (r.normal.v3Dot(wo) < 0.0f)
-						r.normal.negate();
-
-					out.bHit = true;
-					out.element = e;
-					out.rayInt = r;
-					out.ray = ray;
-					minDepth = newDepth;
-				}
-			}
-		}
+		grid.Traverse(out, ray);
 	}
 
 	void World::CheckRayElementIntersections(bool& bHit, F32 d, const Ray& ray)const
 	{
-		// Keep track of the closest element
-		F32 minDepth = 100000000.0f;
-		VML::Vector wo = ray.GetDirection();
-		wo.negate();
-
-		for (auto it = elements.begin(); it != elements.end(); it++)
-		{
-			WorldElement e = *it;
-
-			F32 t;
-			bHit = e.pGeometry->Intersects(t, ray, e.transform);
-			if (bHit && t < d)
-				return;
-		}
-
-		bHit = false;
+		grid.Traverse(bHit, d, ray);
 	}
 
 

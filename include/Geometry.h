@@ -4,6 +4,7 @@
 #include "Util.h"
 #include <Transform.h>
 #include <map>
+#include <BoundingVolume.h>
 
 namespace RE
 {
@@ -38,10 +39,13 @@ namespace RE
 		VML::Vector GetOrigin()const;
 		// Gets a copy of a direction vector of this ray.
 		VML::Vector GetDirection()const;
-		
+		// Returns the inverse of the direction vector (1 / direction)
+		VML::VECTOR3F GetInvDirection()const;
+
 	private:
 		VML::Vector origin;
 		VML::Vector direction;
+		VML::VECTOR3F invD;
 	};
 
 	struct RayIntersection
@@ -76,44 +80,7 @@ namespace RE
 	
 
 
-	class BoundingVolume
-	{
-	public: 
-		// Default constructor.
-		BoundingVolume() = default;
-
-		// Default destructor.
-		virtual ~BoundingVolume() = default;
-
-		// Checks to see if a ray intersects this geometry.
-		// @param [out] outHitInfo - A list of the intersection points.
-		// @param ray - The ray to check against.
-		// @return Does the ray intersect this geometry?
-		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const = 0;
-	};
-
-	RE_ALIGN_MS(16) class BoundingSphere : public BoundingVolume
-	{
-	public:
-		// Creates a unit bounding sphere.
-		BoundingSphere();
-		// Creates a bounding sphere with the specified origin and radius.
-		BoundingSphere(const VML::Vector& origin, F32 radius);
-
-		// Default destructor.
-		virtual ~BoundingSphere() = default;
-
-		// Checks to see if a ray intersects this geometry.
-		// @param [out] outHitInfo - A list of the intersection points.
-		// @param ray - The ray to check against.
-		// @return Does the ray intersect this geometry?
-		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const override;
-
-	private:
-		VML::Vector origin;
-		F32 radius;
-	} RE_ALIGN_GCC(16);
-
+	
 
 
 
@@ -137,6 +104,12 @@ namespace RE
 		// @param elementTransform - The transform of the WorldElement that uses this geometry.
 		// @return Does the ray intersect this geometry?
 		virtual bool Intersects(F32& t, const Ray& ray, const Transform& elementTransform)const = 0;
+
+		// Gets the bounding box for this geometry.
+		virtual BoundingBox GetBoundingBox()const = 0;
+		
+		// Can this object be bounding? (ie planes cannot)
+		virtual bool HasBounds()const;
 	};
 
 	class Plane : public Geometry
@@ -170,10 +143,15 @@ namespace RE
 		// @return Does the ray intersect this geometry?
 		virtual bool Intersects(F32& tmin, const Ray& ray, const Transform& elementTransform)const override;
 
+		// Gets the bounding box for this geometry.
+		virtual BoundingBox GetBoundingBox()const override;
+
+		// Can this object be bounding? (ie planes cannot)
+		virtual bool HasBounds()const;
+
 	protected:
 		VML::Vector normal;
 	};
-
 
 	class Sphere : public Geometry
 	{
@@ -202,6 +180,9 @@ namespace RE
 		// @return Does the ray intersect this geometry?
 		virtual bool Intersects(F32& tmin, const Ray& ray, const Transform& elementTransform)const override;
 
+		// Gets the bounding box for this geometry.
+		virtual BoundingBox GetBoundingBox()const override;
+
 	protected:
 		F32 radius;
 	};
@@ -227,10 +208,44 @@ namespace RE
 		// @return Does the ray intersect this geometry?
 		virtual bool Intersects(F32& tmin, const Ray& ray, const Transform& elementTransform)const override;
 
+		// Gets the bounding box for this geometry.
+		virtual BoundingBox GetBoundingBox()const override;
+
 	private:
 		VML::VECTOR3F p1, p2, p3;
 		VML::Vector normal;
 	};
+
+	RE_ALIGN_MS(16) class Disk : public Geometry
+	{
+	public:
+		Disk(F32 radius, VML::VECTOR3F normal);
+
+		// Checks to see if a ray interects this geometry.
+		// @param outHitInfo - Describes the point of intersection.
+		// @param ray - The ray to check against.
+		// @param elementTransform - The transform of the WorldElement that uses this geometry.
+		// @return Does the ray intersect this geometry?
+		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const override;
+
+		// Checks to see if a ray intersects this geometry, but doesn't calculate any normals, etc.
+		// @param [out] tmin - The t value for this ray, if there is an intersection point.
+		// @param ray - The ray to check against.
+		// @param elementTransform - The transform of the WorldElement that uses this geometry.
+		// @return Does the ray intersect this geometry?
+		virtual bool Intersects(F32& tmin, const Ray& ray, const Transform& elementTransform)const override;
+
+		// Gets the bounding box for this geometry.
+		virtual BoundingBox GetBoundingBox()const override;
+
+	protected:
+		VML::Vector normal;
+		F32 radiusSq;
+	} RE_ALIGN_GCC(16);
+
+
+
+
 
 	Geometry * LoadGeometry(const std::map<std::string, std::string>& params);
 	Geometry * LoadGeometry(const std::string& params);

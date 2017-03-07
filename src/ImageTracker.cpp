@@ -36,7 +36,7 @@ namespace RE
 		assert(buffer);
 
 		U32 width = buffer->GetWidth();
-		U32 newIndex = row * width + col;
+		I32 newIndex = row * width + col;
 		for (I32 i = lastIndex; i <= newIndex; i++)
 		{
 			ColorU8 cu8 = buffer->operator()(i).ToColorU8();

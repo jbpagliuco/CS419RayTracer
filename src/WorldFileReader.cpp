@@ -4,7 +4,6 @@ WorldFileReader::WorldFileReader()
 {
 	groups["("] = ")";
 	groups["["] = "]";
-	groups["{"] = "}";
 	groups["<"] = ">";
 }
 

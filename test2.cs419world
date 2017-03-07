@@ -1,7 +1,4 @@
 
-
-
-
 Camera
     pos 10.0 4.0 0.0
     lookat 0.0 0.0 0.0
@@ -9,11 +6,9 @@ Camera
     type pinhole 1.0 2.0
     
     
-    
-// Lights
 Light ambient  (0.6   1.0 1.0 1.0    0.25)   
-Light parallel  (0.5   1.0 1.0 1.0   0.5 1.0 0.5)
-//@Light point  0.5    1.0 1.0 1.0    1.0 6.0 -0.0   true
+// Light parallel  (0.5   1.0 1.0 1.0   0.5 1.0 0.5)
+Light point  (0.5  1.0 1.0 1.0  1.0 6.0 -0.0  true)
 
 
 
@@ -27,6 +22,7 @@ Light parallel  (0.5   1.0 1.0 1.0   0.5 1.0 0.5)
 
 // Cache materials
 @mFloor Material matte (0.2 1.0  1.0 0.0 1.0 1.0)
+@mRed Material phong (0.4  2.0  1.0 0.3 0.3 1.0   1.0   1.0 1.0 1.0 1.0   64.0)
 
 
 
@@ -45,11 +41,16 @@ Light parallel  (0.5   1.0 1.0 1.0   0.5 1.0 0.5)
     Geometry plane   1.0 0.0 0.0
     Material @mFloor
     
-    
+
 @sGreen WorldElement
     Transform 0.0 0.0 0.0
     Geometry @Sphere2
-    Material phong  0.4  2.0  0.3 1.0 0.3 1.0   1.0  1.0 1.0 1.0 1.0  16.0
+    Material phong  0.4  2.0  0.3 1.0 0.3 1.0   1.0  1.0 1.0 1.0 1.0  32.0
+    
+@sBlue WorldElement
+    Transform 1.0 5.0 -3.0
+    Geometry @Sphere1.5
+    Material phong  0.4  2.0  0.3 0.3 1.0 1.0   1.0  1.0 1.0 1.0 1.0  32.0
     
     
     

@@ -57,4 +57,14 @@ namespace RE
 
 		return false;
 	}
+
+	BoundingBox Plane::GetBoundingBox()const
+	{
+		return BoundingBox();
+	}
+
+	bool Plane::HasBounds()const
+	{
+		return false;
+	}
 }
