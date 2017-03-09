@@ -15,7 +15,7 @@ namespace RE
 		World * p = (World*)pWorld;
 		if (name != "")
 		{
-			Geometry * pGeo = LoadGeometry(params);
+			Geometry * pGeo = LoadGeometry(params, p);
 			p->assetManager.AddGeometry(name, pGeo);
 		}
 		else
@@ -29,8 +29,22 @@ namespace RE
 		World * p = (World*)pWorld;
 		if (name != "")
 		{
-			Material * pMat = LoadMaterial(params);
+			Material * pMat = LoadMaterial(params, p);
 			p->assetManager.AddMaterial(name, pMat);
+		}
+		else
+		{
+
+		}
+	}
+
+	void LoadTexture2D(const std::string& name, TypeParams params, void* pWorld)
+	{
+		World * p = (World*)pWorld;
+		if (name != "")
+		{
+			Texture2D * pTex = LoadTexture2D(params);
+			p->assetManager.AddTexture2D(name, pTex);
 		}
 		else
 		{
@@ -50,7 +64,7 @@ namespace RE
 			e.pGeometry = p->assetManager.GetGeometry(geometry.substr(1));
 		else
 		{
-			e.pGeometry = LoadGeometry(geometry);
+			e.pGeometry = LoadGeometry(geometry, p);
 			p->assetManager.AddGeometry(e.pGeometry);
 		}
 
@@ -59,7 +73,7 @@ namespace RE
 			e.pMaterial = p->assetManager.GetMaterial(material.substr(1));
 		else
 		{
-			e.pMaterial = LoadMaterial(material);
+			e.pMaterial = LoadMaterial(material, p);
 			p->assetManager.AddMaterial(e.pMaterial);
 		}
 
@@ -163,16 +177,45 @@ namespace RE
 
 	void World::LoadFromFile(const std::string& file)
 	{
+		RE_LOG(WORLD, INIT, "Loading world from " << file);
 		WorldFileReader wfr;
 
 		wfr.AddRule("Geometry", std::vector<std::string>({ "type", "params" }), LoadGeometry);
 		wfr.AddRule("Material", std::vector<std::string>({ "type", "params" }), LoadMaterial);
+		wfr.AddRule("Texture2D", std::vector<std::string>({ "type", "params" }), LoadTexture2D);
 		wfr.AddRule("WorldElement", std::vector<std::string>({ "Transform", "Geometry", "Material" }), LoadWorldElement);
 		wfr.AddRule("Camera", std::vector<std::string>({ "pos", "lookat", "up", "type" }), LoadCamera);
 		wfr.AddRule("Light", std::vector<std::string>({ "type", "params" }), LoadLight);
 
 		wfr.ReadFromFile(file, this);
 
+		/*I32 n = 22;
+		for (I32 x = -n; x <= n; x++)
+		{
+			RE_LOG_SAMELINE(WORLD, INIT, "X = " << x);
+			for (I32 y = -n; y <= n; y++)
+			{
+				for (I32 z = -n; z <= n; z++)
+				{
+					F32 m = 3.0f;
+					TypeParams params;
+					params["Transform"] = std::to_string(m * x) + " " + std::to_string(m * y) + " " + std::to_string(m * z);
+					params["Geometry"] = "@gSphere";
+
+					I32 i = RandInt(0, 3);
+					if (i == 0)
+						params["Material"] = "@mSphereRed";
+					else if (i == 1)
+						params["Material"] = "@mSphereGreen";
+					else
+						params["Material"] = "@mSphereBlue";
+					LoadWorldElement("", params, this);
+				}
+			}
+		}
+		RE_LOG_NEWLINE();*/
+
+		RE_LOG(WORLD, INIT, "Creating world grid");
 		grid.AddObjects(elements);
 	}
 }

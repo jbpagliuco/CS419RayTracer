@@ -2,7 +2,7 @@
 
 namespace RE
 {
-	Plane::Plane() : normal(0.0f, 0.0f, 1.0f, 0.0f)
+	Plane::Plane() : normal(0.0f, 1.0f, 0.0f, 0.0f)
 	{
 	}
 

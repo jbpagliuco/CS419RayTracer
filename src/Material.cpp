@@ -26,7 +26,7 @@ namespace RE
 
 
 
-	Material * LoadMaterial(const std::map<std::string, std::string>& params)
+	Material * LoadMaterial(const std::map<std::string, std::string>& params, const World* world)
 	{
 		std::string type = params.at("type");
 		
@@ -49,12 +49,20 @@ namespace RE
 
 			return new Phong(ka, kd, cd, ks, cs, exp);
 		}
+		else if (type == "svmatte")
+		{
+			F32 ka, kd;
+			std::string textureName;
+			ss >> ka >> kd >> textureName;
+
+			return new SVMatte(ka, kd, world->assetManager.GetTexture2D(textureName));
+		}
 
 		return nullptr;
 	}
 
 
-	Material * LoadMaterial(const std::string& params)
+	Material * LoadMaterial(const std::string& params, const World* world)
 	{
 		std::stringstream ss(params);
 
@@ -66,6 +74,6 @@ namespace RE
 			p["params"] += curr + " ";
 		p["params"] += curr;
 
-		return LoadMaterial(p);
+		return LoadMaterial(p, world);
 	}
 }

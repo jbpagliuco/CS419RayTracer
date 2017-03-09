@@ -51,6 +51,64 @@ namespace RE
 	};
 
 
+
+
+
+
+
+	class WorldGrid : public RegularGrid<WorldElement, ElementIntersection>
+	{
+	public:
+		WorldGrid();
+
+		virtual ~WorldGrid();
+
+	protected:
+		// Adds an object to the grid.
+		// @param object - The object to add.
+		virtual void AddObject(const WorldElement& object) override;
+
+		// Places an object in its cell.
+		// @param pObject - A pointer to the object to place.
+		virtual void PlaceObject(const WorldElement* pObject) override;
+
+		// Trace a ray through the objects and do the necessary calculations.
+		// @param [out] out - The output.
+		// @param ray - The ray to trace.
+		// @param objects - The objects to test intersections.
+		// @return { bHit, t }
+		virtual ObjectIntersectionOutput CheckObjectIntersections(ElementIntersection& out, const Ray& ray, const PObjects objects)const override;
+
+		// Trace a ray through the objects and and check for any intersections.
+		// @param ray - The ray to trace.
+		// @param d - The max distance for an intersection.
+		// @param objects - The objects to test intersections.
+		// @return Did the ray hit anything?
+		virtual bool CheckShallowObjectIntersections(const Ray& ray, F32 d, const PObjects objects)const override;
+
+		// Called after traversing through the grid.
+		// @param [out] out - The output.
+		// @param ray - The ray to trace.
+		virtual void PostTraverse(ElementIntersection& out, const Ray& ray)const override;
+
+		// Called after traversing through the grid.
+		// @param ray - The ray to trace.
+		// @return Did the ray hit anything?
+		virtual bool PostTraverseShallow(const Ray& ray, F32 d)const override;
+
+	private:
+		// Elements that can't be bounded (ie planes), thus can't be part of the grid
+		PObjects unboundedElements;
+	};
+
+
+
+
+
+
+
+
+
 	// Holds the world.
 	class World
 	{
@@ -102,7 +160,7 @@ namespace RE
 		std::vector<WorldElement> elements;
 		std::vector<Light*> lights;
 
-		RegularGrid grid;
+		WorldGrid grid;
 	};
 
 }

@@ -39,6 +39,29 @@ namespace RE
 	};
 
 
+
+	class SVMatte : public Material
+	{
+	public:
+		// Creates a matte material.
+		// @param ka - The ambient factor.
+		// @param kd - The diffuse factor.
+		// @param pTex - A pointer to the texture to use.
+		SVMatte(F32 ka, F32 kd, Texture2D * pTex);
+
+		virtual ~SVMatte();
+
+		virtual Color Shade(const ElementIntersection& ei, World& world)override;
+
+	private:
+		SVLambertian ambientBRDF;
+		SVLambertian diffuseBRDF;
+	};
+
+
+
+
+
 	class Phong : public Material
 	{
 	public:
@@ -61,6 +84,6 @@ namespace RE
 		GlossySpecular specularBRDF;
 	};
 
-	Material * LoadMaterial(const std::map<std::string, std::string>& params);
-	Material * LoadMaterial(const std::string& params);
+	Material * LoadMaterial(const std::map<std::string, std::string>& params, const World* world);
+	Material * LoadMaterial(const std::string& params, const World* world);
 }

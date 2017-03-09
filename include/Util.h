@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <fstream>
+#include <assert.h>
 
 #define RE_SAFE_FREE(p) if (p) { delete p; p = nullptr; }
 #define RE_SAFE_FREE_A(p) if (p) { delete[] p; p = nullptr; }
@@ -97,6 +99,36 @@ namespace RE
 		T Y;
 		T Z;
 		T W;
+	};
+
+
+
+	// A wrapper class that reads from files.
+	class FileReader
+	{
+	public:
+		// Open the specified file.
+		// @param filename - The filename.
+		FileReader(const std::string& filename);
+
+		virtual ~FileReader();
+
+		// Adds a string to the comment list.
+		// @param comment - A prefix string, which if read, the file reader will skip the line.
+		void AddCommentString(const std::string& comment);
+
+		// Reads the next non-comment line.
+		bool ReadLine(std::string &line);
+
+		// Is the reader at the end of this file?
+		bool EndOfFile()const;
+
+	private:
+		bool IsCommentString(const std::string& line)const;
+
+	private:
+		std::ifstream file;
+		std::vector<std::string> comments;
 	};
 
 

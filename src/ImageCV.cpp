@@ -31,6 +31,13 @@ namespace RE
 #endif
 	}
 
+	ImageCV::ImageCV(const std::string& filename)
+	{
+#ifndef HIDE_OPENCV
+		img = cv::imread(filename, CV_LOAD_IMAGE_COLOR);
+#endif
+	}
+
 	void ImageCV::SaveToFile(const std::string& file)const
 	{
 #ifndef HIDE_OPENCV
@@ -40,6 +47,37 @@ namespace RE
 		params.push_back(7);
 
 		cv::imwrite(file, img, params);
+#endif
+	}
+
+	Color ImageCV::GetColor(U32 row, U32 col)const
+	{
+#ifndef HIDE_OPENCV
+		assert(row >= 0 && col >= 0 && row < img.size().height && col < img.size().width);
+		cv::Vec3b color = img.at<cv::Vec3b>(cv::Point(col, row));
+		ColorU8 c8(color.val[2], color.val[1], color.val[0], 255);
+		return Color(c8);
+#else
+		return Color();
+#endif
+	}
+
+
+	U32 ImageCV::Width()const
+	{
+#ifndef HIDE_OPENCV
+		return img.size().width;
+#else
+		return 0;
+#endif
+	}
+	
+	U32 ImageCV::Height()const
+	{
+#ifndef HIDE_OPENCV
+		return img.size().height;
+#else
+		return 0;
 #endif
 	}
 }

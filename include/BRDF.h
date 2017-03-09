@@ -2,6 +2,7 @@
 
 #include <Sampler.h>
 #include <Color.h>
+#include <Texture.h>
 
 namespace RE
 {
@@ -79,6 +80,47 @@ namespace RE
 		// Diffuse color
 		Color cd;
 	};
+
+
+
+	class SVLambertian : public BRDF
+	{
+	public:
+		SVLambertian(F32 kd, Texture2D * pTex);
+
+		virtual ~SVLambertian();
+
+		// Calculates the BRDF.
+		// @param ei - The intersection.
+		// @param wi - The incoming direction.
+		// @param wo - The outgoing direction.
+		virtual Color F(const ElementIntersection& ei, const VML::Vector& wi, const VML::Vector& wo)const override;
+
+		// Samples the BRDF.
+		// @param ei - The intersection.
+		// @param wi - The incoming direction.
+		// @param wo - The outgoing direction.
+		virtual Color SampleF(const ElementIntersection& ei, const VML::Vector& wi, const VML::Vector& wo)const override;
+
+		// Calculates the bihemispherical reflectance.
+		// @param ei - The intersection.
+		// @param wi - The incoming direction.
+		// @param wo - The outgoing direction.
+		virtual Color Rho(const ElementIntersection& ei, const VML::Vector& wi, const VML::Vector& wo)const override;
+
+		// Calculates the bihemispherical reflectance.
+		// @param ei - The intersection.
+		// @param wo - The outgoing direction.
+		virtual Color Rho(const ElementIntersection& ei, const VML::Vector& wo)const override;
+
+	private:
+		// Diffuse multiplier
+		F32 kd;
+		// Diffuse color
+		Texture2D * pTex;
+	};
+
+
 
 
 	class GlossySpecular : public BRDF

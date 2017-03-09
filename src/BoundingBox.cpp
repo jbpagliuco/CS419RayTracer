@@ -72,7 +72,32 @@ namespace RE
 		// Find smallest exiting t value
 		t1 = std::min(tMax.X, std::min(tMax.Y, tMax.Z));
 
-		return (t0 < t1 && t1 > VML::FLOAT_EPSILON);
+		if (t0 < t1 && t1 > VML::FLOAT_EPSILON)
+		{
+			RayIntersection r0;
+			r0.t = t0;
+			r0.worldCoords = ray.GetPointAlongRay(t0);
+
+			RayIntersection r1;
+			r1.t = t1;
+			r1.worldCoords = ray.GetPointAlongRay(t1);
+
+			if (t0 >= 0.0f)
+			{
+				outHitInfo.closestIntersection = r0;
+				outHitInfo.intersections.push_back(r0);
+				outHitInfo.numIntersections++;
+			}
+			else
+				outHitInfo.closestIntersection = r1;
+
+			outHitInfo.intersections.push_back(r1);
+			outHitInfo.numIntersections++;
+
+			return true;
+		}
+
+		return false;
 	}
 
 	bool BoundingBox::Intersects(RayIntersectionList& outHitInfo, const Ray& ray, D64& t0, Vector3<D64>& tMin, Vector3<D64>& tMax)const
@@ -124,7 +149,32 @@ namespace RE
 		// Find smallest exiting t value
 		t1 = std::min(tMax.X, std::min(tMax.Y, tMax.Z));
 
-		return (t0 < t1 && t1 > VML::FLOAT_EPSILON);
+		if (t0 < t1 && t1 > VML::FLOAT_EPSILON)
+		{
+			RayIntersection r0;
+			r0.t = t0;
+			r0.worldCoords = ray.GetPointAlongRay(t0);
+
+			RayIntersection r1;
+			r1.t = t1;
+			r1.worldCoords = ray.GetPointAlongRay(t1);
+
+			if (t0 >= 0.0f)
+			{
+				outHitInfo.closestIntersection = r0;
+				outHitInfo.intersections.push_back(r0);
+				outHitInfo.numIntersections++;
+			}
+			else
+				outHitInfo.closestIntersection = r1;
+
+			outHitInfo.intersections.push_back(r1);
+			outHitInfo.numIntersections++;
+
+			return true;
+		}
+
+		return false;
 	}
 
 	bool BoundingBox::IsInside(const VML::Vector& point)const

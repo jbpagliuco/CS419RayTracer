@@ -40,7 +40,6 @@ namespace RE
 	private:
 		U32 width, height;
 		F32 pixelWidth;
-
 		Sampler sampler;
 	};
 

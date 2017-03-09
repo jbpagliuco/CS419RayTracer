@@ -16,6 +16,7 @@ namespace RE
 	{
 		Color() : r(0.0f), g(0.0f), b(0.0f), a(0.0f) { }
 		Color(F32 _r, F32 _g, F32 _b, F32 _a) : r(_r), g(_g), b(_b), a(_a) { }
+		Color(ColorU8);
 
 		ColorU8 ToColorU8()const;
 

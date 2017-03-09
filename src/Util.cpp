@@ -6,6 +6,7 @@
 #include <locale>
 #include <chrono>
 #include <sstream>
+#include <assert.h>
 
 namespace RE
 {
@@ -60,5 +61,58 @@ namespace RE
 	U64 DiffTime(const std::chrono::high_resolution_clock::time_point& start, const std::chrono::high_resolution_clock::time_point& end)
 	{
 		return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+	}
+
+
+
+
+
+
+
+
+	FileReader::FileReader(const std::string& filename) : file(filename)
+	{
+		assert(file.is_open());
+	}
+
+	FileReader::~FileReader()
+	{
+		file.close();
+	}
+
+	void FileReader::AddCommentString(const std::string& comment)
+	{
+		comments.push_back(comment);
+	}
+
+	bool FileReader::ReadLine(std::string& line)
+	{
+		assert(file);
+		
+		while (std::getline(file, line))
+		{
+			if (!IsCommentString(line))
+				return true;
+		}
+
+		return false;
+	}
+
+	bool FileReader::EndOfFile()const
+	{
+		return file.eof();
+	}
+
+	bool FileReader::IsCommentString(const std::string& line)const
+	{
+		std::string trimmed = line;
+		RemoveLeadingWhitespace(trimmed);
+		for (auto it = comments.begin(); it != comments.end(); it++)
+		{
+			if (trimmed.find(*it) == 0)
+				return true;
+		}
+
+		return false;
 	}
 }

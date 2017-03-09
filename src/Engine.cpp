@@ -28,7 +28,7 @@ namespace RE
 
 		world.LoadFromFile(worldFile);
 		
-		renderingEngine.SetWorld(&world);
+	    renderingEngine.SetWorld(&world);
 	}
 
 	void Engine::Unload()

@@ -19,6 +19,16 @@ namespace RE
 		pColor->a = a;
 	}
 
+	Color::Color(ColorU8 c)
+	{
+		r = (F32)c.r / 255.0f;
+		g = (F32)c.g / 255.0f;
+		b = (F32)c.b / 255.0f;
+		a = (F32)c.a / 255.0f;
+
+		Clamp();
+	}
+
 	ColorU8 Color::ToColorU8()const
 	{
 		return ColorU8(

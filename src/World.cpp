@@ -89,12 +89,12 @@ namespace RE
 
 	void World::CheckRayElementIntersections(ElementIntersection& out, const Ray& ray)const
 	{
-		grid.Traverse(out, ray);
+		out = grid.Traverse(ray);
 	}
 
 	void World::CheckRayElementIntersections(bool& bHit, F32 d, const Ray& ray)const
 	{
-		grid.Traverse(bHit, d, ray);
+		bHit = grid.TraverseShallow(ray, d);
 	}
 
 

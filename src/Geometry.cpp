@@ -2,6 +2,8 @@
 
 #include <sstream>
 #include <P4Mem.h>
+#include <Mesh.h>
+#include <World.h>
 
 namespace RE
 {
@@ -10,7 +12,7 @@ namespace RE
 		return true;
 	}
 
-	Geometry * LoadGeometry(const std::map<std::string, std::string>& params)
+	Geometry * LoadGeometry(const std::map<std::string, std::string>& params, const World* world)
 	{
 		std::string type = params.at("type");
 		std::stringstream ss(params.at("params"));
@@ -53,11 +55,29 @@ namespace RE
 			void *pAlignedMem = P4::AllocateAlignedMemory(sizeof(Disk), 16);
 			return new(pAlignedMem)Disk(radius, normal);
 		}
+		else if (type == "mesh")
+		{
+			std::string filename;
+
+			ss >> filename;
+			return LoadMeshFromFile(filename);
+		}
+		else if (type == "ugrid")
+		{
+			std::string geoName;
+			Vector3<I32> n;
+			F32 scalar;
+
+			ss >> geoName >> n.X >> n.Y >> n.Z >> scalar;
+
+			void *pAlignedMem = P4::AllocateAlignedMemory(sizeof(UGrid), 16);
+			return new(pAlignedMem)UGrid(world->assetManager.GetGeometry(geoName), n, scalar);
+		}
 
 		return nullptr;
 	}
 
-	Geometry * LoadGeometry(const std::string& params)
+	Geometry * LoadGeometry(const std::string& params, const World* world)
 	{
 		std::stringstream ss(params);
 
@@ -69,6 +89,6 @@ namespace RE
 			p["params"] += curr + " ";
 		p["params"] += curr;
 
-		return LoadGeometry(p);
+		return LoadGeometry(p, world);
 	}
 }

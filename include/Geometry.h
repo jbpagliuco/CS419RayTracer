@@ -5,78 +5,12 @@
 #include <Transform.h>
 #include <map>
 #include <BoundingVolume.h>
+#include <Grid.h>
+#include <Ray.h>
 
 namespace RE
 {
-	// Epsilon value to change shadow ray origins.
-	const F32 RAY_EPSILON = (10 * VML::FLOAT_EPSILON);
-
-	class Ray
-	{
-	public:
-		// Creates a ray starting at the origin and moving in the (0, 0, 1) direction.
-		Ray();
-
-		// Creates a ray.
-		// @param origin - The starting point of this ray.
-		// @param direction - The direction of this ray.
-		// @param epsilon - Move the origin of the ray a small amount in the direction of the ray.
-		Ray(const VML::VECTOR3F& origin, const VML::VECTOR3F& direction);
-
-		// Creates a ray.
-		// @param origin - The starting point of this ray.
-		// @param direction - The direction of this ray.
-		Ray(const VML::Vector& origin, const VML::Vector& direction, F32 epsilon = 0.0f);
-
-		// Default destructor.
-		virtual ~Ray() = default;
-
-		// Gets a point along the ray.
-		// @param t - The distance from the ray's origin.
-		VML::Vector GetPointAlongRay(F32 t)const;
-
-		// Gets a copy of the origin point of this ray.
-		VML::Vector GetOrigin()const;
-		// Gets a copy of a direction vector of this ray.
-		VML::Vector GetDirection()const;
-		// Returns the inverse of the direction vector (1 / direction)
-		VML::VECTOR3F GetInvDirection()const;
-
-	private:
-		VML::Vector origin;
-		VML::Vector direction;
-		VML::VECTOR3F invD;
-	};
-
-	struct RayIntersection
-	{
-		// Distance along the ray.
-		F32 t;
-
-		// World coordinates of intersection.
-		VML::Vector worldCoords;
-
-		// Normal vector at this intersection.
-		VML::Vector normal;
-	};
-
-	struct RayIntersectionList
-	{
-		RayIntersectionList()
-		{
-			intersections = std::vector<RayIntersection>();
-			numIntersections = 0;
-		}
-
-		// The closest intersection to the ray origin.
-		RayIntersection closestIntersection;
-
-		// A list of all intersection points.
-		std::vector<RayIntersection> intersections;
-
-		// The number of intersections with this geometry.
-		U32 numIntersections;
-	};
+	
 	
 
 
@@ -111,6 +45,70 @@ namespace RE
 		// Can this object be bounding? (ie planes cannot)
 		virtual bool HasBounds()const;
 	};
+
+
+
+
+
+
+	struct GeometryGridType
+	{
+		Geometry * pGeo;
+		Transform transform;
+	};
+
+	struct GeometryIntersection
+	{
+		GeometryIntersection() : bHit(false) {}
+
+		bool bHit;
+		RayIntersectionList rl;
+	};
+
+	class GeometryGrid : public RegularGrid<GeometryGridType, GeometryIntersection>
+	{
+	public:
+		GeometryGrid();
+
+		virtual ~GeometryGrid();
+
+	protected:
+		// Adds an object to the grid.
+		// @param object - The object to add.
+		virtual void AddObject(const Object& object) override;
+
+		// Places an object in its cell.
+		// @param pObject - A pointer to the object to place.
+		virtual void PlaceObject(PObject pObject) override;
+
+		// Trace a ray through the objects and do the necessary calculations.
+		// @param [out] out - The output.
+		// @param ray - The ray to trace.
+		// @param objects - The objects to test intersections.
+		// @return { bHit, t }
+		virtual ObjectIntersectionOutput CheckObjectIntersections(GeometryIntersection& out, const Ray& ray, const PObjects objects)const override;
+
+		// Trace a ray through the objects and and check for any intersections.
+		// @param ray - The ray to trace.
+		// @param d - The max distance for an intersection.
+		// @param objects - The objects to test intersections.
+		// @return Did the ray hit anything?
+		virtual bool CheckShallowObjectIntersections(const Ray& ray, F32 d, const PObjects objects)const override;
+
+		// Called after traversing through the grid.
+		// @param [out] out - The output.
+		// @param ray - The ray to trace.
+		virtual void PostTraverse(GeometryIntersection& out, const Ray& ray)const override;
+
+		// Called after traversing through the grid.
+		// @param ray - The ray to trace.
+		// @return Did the ray hit anything?
+		virtual bool PostTraverseShallow(const Ray& ray, F32 d)const override;
+	};
+
+
+
+
 
 	class Plane : public Geometry
 	{
@@ -243,10 +241,49 @@ namespace RE
 		F32 radiusSq;
 	} RE_ALIGN_GCC(16);
 
+	class UGrid : public Geometry
+	{
+	public:
+		// Creates a uniform grid with the provided mesh.
+		// @param pGeo - A pointer to the geometry to use.
+		// @param n - The extent of the grid.
+		// @param scalar - Scalar factor.
+		UGrid(Geometry * pGeo, Vector3<I32> n, F32 scalar);
+
+		virtual ~UGrid();
+
+		// Checks to see if a ray intersects this geometry.
+		// @param [out] outHitInfo - A list of the intersection points.
+		// @param ray - The ray to check against.
+		// @param elementTransform - The transform of the WorldElement that uses this geometry.
+		// @return Does the ray intersect this geometry?
+		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const override;
+
+		// Checks to see if a ray intersects this geometry, but doesn't calculate any normals, etc.
+		// @param [out] t - The t value for this ray, if there is an intersection point.
+		// @param ray - The ray to check against.
+		// @param elementTransform - The transform of the WorldElement that uses this geometry.
+		// @return Does the ray intersect this geometry?
+		virtual bool Intersects(F32& t, const Ray& ray, const Transform& elementTransform)const override;
+
+		// Gets the bounding box for this geometry.
+		virtual BoundingBox GetBoundingBox()const override;
+	
+	private:
+		GeometryGrid grid;
+		std::vector<GeometryGridType> objects;
+	};
 
 
 
 
-	Geometry * LoadGeometry(const std::map<std::string, std::string>& params);
-	Geometry * LoadGeometry(const std::string& params);
+
+
+	
+
+
+
+	class World;
+	Geometry * LoadGeometry(const std::map<std::string, std::string>& params, const World* world);
+	Geometry * LoadGeometry(const std::string& params, const World* world);
 }

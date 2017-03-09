@@ -1,0 +1,64 @@
+
+Camera
+    pos -4.0 0.25 5.0
+    lookat 0.0 1.0 0.0
+    up 0.0 1.0 0.0
+    type pinhole 1.0 2.0
+    
+    
+Light ambient  (0.6   1.0 1.0 1.0    0.25)   
+Light parallel  (1.0   1.0 1.0 1.0   -4.0 7.0 5.0)
+Light point  (0.25  1.0 1.0 1.0  -3.0 2.0 0.5  true)
+//Light point  (1.0  1.0 1.0 1.0  0.0 0.5 -1.5  true)
+
+
+
+
+// Cache geometry
+@gGrass Geometry mesh Assets/grass.obj
+@gGrassPlane Geometry ugrid (gGrass 1 0 1 1.25)
+@gZebra Geometry mesh Assets/Zebra/zebra.obj
+// @gBunny Geometry mesh Assets/Bunny/bunny.obj
+
+
+// Cache textures
+@tZebra Texture2D image Assets/Zebra/zebra-atlas.png
+// @tBunny Texture2D image Assets/Bunny/bunny-atlas.png
+
+
+// Cache materials
+@mFloor Material matte (0.2 1.0  0.8 0.7 0.6 1.0)
+@mGrass Material matte (0.2 2.0  0.3 1.0 0.3 1.0)
+@mZebra Material svmatte (0.4 2.0  tZebra)
+// @mBunny Material svmatte (0.4 2.0  tBunny)
+
+
+
+@floor WorldElement
+    Transform 0.0 -0.5 0.0
+    Geometry plane 0.0 1.0 0.0
+    Material @mFloor
+   
+@zebra WorldElement
+    Transform 0.0 2.084105 0.0
+    Geometry @gZebra
+    Material @mZebra
+   
+@grass WorldElement
+    Transform 0.0 0.0 0.0
+    Geometry @gGrassPlane
+    Material @mGrass
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

@@ -28,7 +28,14 @@ namespace RE
 		// @param colorBuffer - The color buffer.
 		ImageCV(U32 width, U32 height, const ColorBuffer2D* colorBuffer);
 
+		ImageCV(const std::string& filename);
+
 		virtual ~ImageCV() = default;
+
+		virtual Color GetColor(U32 row, U32 col)const;
+
+		U32 Width()const;
+		U32 Height()const;
 
 		// Saves this image to a file on disk.
 		// @param file - The filename.
