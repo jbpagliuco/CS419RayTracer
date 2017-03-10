@@ -82,7 +82,7 @@ namespace RE
 			color = FOREGROUND_RED | FOREGROUND_BLUE;
 
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color | FOREGROUND_INTENSITY);
-		std::cout << "\r[" << system << "] (" << cat << "): " << msg << "          ";
+		std::cout << "\r[" << system << "] (" << cat << "): " << msg << "    ";
 	}
 
 	template <typename T>

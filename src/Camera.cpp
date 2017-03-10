@@ -64,21 +64,31 @@ namespace RE
 	{
 		U32 pixelIndex = 0;
 		U32 totalNumPixels = vp.GetWidth() * vp.GetHeight();
-		I32 percent = -1;
+		F32 percent = 0.0f;
 
 		U32 width = vp.GetWidth();
 		U32 height = vp.GetHeight();
 		U32 numSamples = vp.GetSampler()->GetNumSamples();
+
+		F32 percentScale = (200.f * 200.f * 1.f) / (width * height * numSamples);
+		auto start = GetTime();
 
 		for (U32 row = 0; row < height; row++)
 		{
 			for (U32 col = 0; col < width; col++)
 			{
 				F32 newPercent = ((F32)pixelIndex / (F32)totalNumPixels) * 100.0f;
-				if (newPercent >= percent + 1)
+				if (newPercent >= percent + percentScale)
 				{
-					RE_LOG_SAMELINE(RENDER_ENG, RUNTIME, "Progress: " << ++percent << "%");
+					percent = newPercent;
 					imageTracker.Update(row, col);
+
+					auto elapsed = DiffTime(start, GetTime());
+					D64 total = 100.0 * elapsed / percent;
+
+					RE_LOG_SAMELINE(RENDER_ENG, RUNTIME, "Progress: " << percent << "% (" 
+						<< "E: " << (elapsed / 1000000. / 60.)
+						<< ", R: " << ((total - elapsed) / 1000000. / 60.) << ")");
 				}
 				pixelIndex++;
 

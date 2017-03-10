@@ -4,7 +4,7 @@
 
 namespace RE
 {
-	UGrid::UGrid(Geometry * pGeo, Vector3<I32> n, F32 scalar)
+	UGrid::UGrid(Geometry * pGeo, Vector3<I32> n, F32 scalar) : grid(1.0f)
 	{
 		BoundingBox bb = pGeo->GetBoundingBox();
 		Vector3<F32> e(bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.max.z - bb.min.z);

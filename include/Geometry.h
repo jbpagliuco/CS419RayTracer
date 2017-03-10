@@ -68,7 +68,8 @@ namespace RE
 	class GeometryGrid : public RegularGrid<GeometryGridType, GeometryIntersection>
 	{
 	public:
-		GeometryGrid();
+		GeometryGrid() = default;
+		GeometryGrid(F32 m);
 
 		virtual ~GeometryGrid();
 

@@ -48,7 +48,26 @@ namespace RE
 			{
 				std::stringstream ss(line.substr(2));
 
-				if (line.find("/") != line.npos)
+				if (line.find("//") != line.npos)
+				{
+					std::string v1, v2, v3;
+					ss >> v1 >> v2 >> v3;
+					std::vector<std::string> v1s = SplitString(v1, "/");
+					Index i1(std::stoull(v1s[0]) - 1, std::stoull(v1s[2]) - 1, 0);
+
+					std::vector<std::string> v2s = SplitString(v2, "/");
+					Index i2(std::stoull(v2s[0]) - 1, std::stoull(v2s[2]) - 1, 0);
+
+					std::vector<std::string> v3s = SplitString(v3, "/");
+					Index i3(std::stoull(v3s[0]) - 1, std::stoull(v3s[2]) - 1, 0);
+
+					i1.bHasUV = false;
+					i2.bHasUV = false;
+					i3.bHasUV = false;
+
+					mesh->AddFace(Face(i1, i2, i3));
+				}
+				else if (line.find("/") != line.npos)
 				{
 					std::string v1, v2, v3;
 					ss >> v1 >> v2 >> v3;

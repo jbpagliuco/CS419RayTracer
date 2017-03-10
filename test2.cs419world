@@ -35,7 +35,7 @@ Light point  (0.25  1.0 1.0 1.0  -3.0 2.0 0.5  true)
 
 
 @floor WorldElement
-    Transform 0.0 -0.5 0.0
+    Transform 0.0 0.0 0.0
     Geometry plane 0.0 1.0 0.0
     Material @mFloor
    
@@ -44,10 +44,10 @@ Light point  (0.25  1.0 1.0 1.0  -3.0 2.0 0.5  true)
     Geometry @gZebra
     Material @mZebra
    
-@grass WorldElement
-    Transform 0.0 0.0 0.0
-    Geometry @gGrassPlane
-    Material @mGrass
+//@grass WorldElement
+//    Transform 0.0 0.0 0.0
+//    Geometry @gGrassPlane
+//    Material @mGrass
     
     
     

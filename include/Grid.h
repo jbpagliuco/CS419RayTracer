@@ -27,7 +27,7 @@ namespace RE
 		};
 
 	public:
-		RegularGrid();
+		RegularGrid(F32 m = 2.0f);
 
 		virtual ~RegularGrid();
 
@@ -121,6 +121,7 @@ namespace RE
 
 		BoundingBox bounds;
 		Vector3<I32> n;
+		F32 m;
 	};
 
 
@@ -151,7 +152,7 @@ namespace RE
 
 	template <typename Object, typename OutputType>
 	RegularGrid<typename Object, typename OutputType>
-		::RegularGrid()
+		::RegularGrid(F32 m) : m(m)
 	{
 
 	}
@@ -194,7 +195,6 @@ namespace RE
 		VML::VECTOR3F min = bounds.min, max = bounds.max;
 
 		VML::VECTOR3F w(max.x - min.x, max.y - min.y, max.z - min.z);
-		F32 m = 2.0f;
 		F32 s = (F32)pow(w.x * w.y * w.z / numObjects, 0.33333333333333);
 		n = Vector3<I32>((I32)(m * w.x / s) + 1, (I32)(m * w.y / s) + 1, (I32)(m * w.z / s) + 1);
 	}

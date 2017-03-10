@@ -4,7 +4,7 @@
 
 namespace RE
 {
-	GeometryGrid::GeometryGrid()
+	GeometryGrid::GeometryGrid(F32 m) : RegularGrid(m)
 	{
 
 	}

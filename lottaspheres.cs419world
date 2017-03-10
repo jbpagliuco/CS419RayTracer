@@ -1,0 +1,46 @@
+
+Camera
+    pos -100.0 100.0 100.0
+    lookat 0.0 1.0 0.0
+    up 0.0 1.0 0.0
+    type pinhole 1.0 2.0
+    
+    
+Light ambient  (0.6   1.0 1.0 1.0    0.25)   
+Light parallel  (1.0   1.0 1.0 1.0   -100.0 100.0 -100.0)
+Light point (1.0 1.0 1.0 1.0    0.0 120.0 0.0 false)
+
+
+
+
+// Cache geometry
+@gSphere Geometry sphere 1.0
+
+
+// Cache materials
+@mFloor Material matte (0.2 1.0  0.8 0.7 0.6 1.0)
+
+@mSphereRed   Material phong (0.2 2.0  1.0 0.3 0.3 1.0    1.0 1.0 1.0 1.0 1.0 32.0)
+@mSphereGreen  Material phong (0.2 2.0  0.3 1.0 0.3 1.0    1.0 1.0 1.0 1.0 1.0 32.0)
+@mSphereBlue Material phong (0.2 2.0  0.3 0.3 1.0 1.0    1.0 1.0 1.0 1.0 1.0 32.0)
+
+
+
+@floor WorldElement
+    Transform 0.0 0.0 0.0
+    Geometry plane 0.0 1.0 0.0
+    Material @mFloor
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
