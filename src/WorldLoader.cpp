@@ -216,6 +216,7 @@ namespace RE
 		RE_LOG_NEWLINE();*/
 
 		RE_LOG(WORLD, INIT, "Creating world grid");
-		grid.AddObjects(elements);
+		//grid.AddObjects(elements);
+		tree = KDTree<KDTypeWorldElement>(elements);
 	}
 }

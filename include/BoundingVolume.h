@@ -2,6 +2,7 @@
 
 #include <VML.h>
 #include <Util.h>
+#include <Transform.h>
 
 namespace RE
 {
@@ -55,6 +56,8 @@ namespace RE
 
 		virtual ~BoundingBox();
 
+		virtual bool operator==(const BoundingBox& other)const;
+
 		// Checks to see if a ray intersects this bounding volume.
 		// @param [out] outHitInfo - A list of the intersection points.
 		// @param ray - The ray to check against.
@@ -70,6 +73,19 @@ namespace RE
 		// Is this point inside of this box?
 		// @param point - The point to check.
 		virtual bool IsInside(const VML::Vector& point)const;
+
+		// Returns the center coordinate of this bounding volume.
+		VML::VECTOR3F GetCenter()const;
+
+		// Returns the longest axis of this bounding volume.
+		U8 LongestAxis()const;
+
+		// Extends this bounding box.
+		// @param other - The bounding box to extend to.
+		void Extend(const BoundingBox& other);
+
+		// Returns the transformed version of this bounding box.
+		BoundingBox TransformBox(const Transform& transform)const;
 
 	public:
 		VML::VECTOR3F min, max;

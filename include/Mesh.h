@@ -3,7 +3,7 @@
 #include <Util.h>
 #include <VML.h>
 #include <Geometry.h>
-#include <Grid.h>
+#include <KDTree.h>
 
 #include <vector>
 
@@ -13,6 +13,7 @@ namespace RE
 	{
 		Index() : bHasUV(false) {}
 		Index(U64 vertex, U64 normal, U64 uv) : vertex(vertex), normal(normal), uv(uv), bHasUV(true) {}
+		Index(U64 vertex, U64 normal, bool bHasUV) : vertex(vertex), normal(normal), uv(uv), bHasUV(bHasUV) {}
 
 		U64 vertex, normal, uv;
 		bool bHasUV;
@@ -30,6 +31,7 @@ namespace RE
 	RE_ALIGN_MS(16) class MeshTriangle : public Geometry
 	{
 	public:
+		MeshTriangle() = default;
 		MeshTriangle(Mesh * pMesh, const Face& face);
 
 		virtual ~MeshTriangle();
@@ -110,6 +112,25 @@ namespace RE
 
 
 
+	class KDTypeMesh : public KDType
+	{
+	public:
+		KDTypeMesh() = default;
+		KDTypeMesh(MeshTriangle t);
+
+		virtual ~KDTypeMesh();
+
+		virtual Geometry* GetGeometry()const override;
+		virtual Transform GetTransform()const override;
+		virtual BoundingBox GetBoundingBox()const override;
+
+	private:
+		MeshTriangle t;
+	};
+
+
+
+
 
 
 	class Mesh : public Geometry
@@ -162,11 +183,12 @@ namespace RE
 		std::vector<VML::VECTOR3F> normals;
 		std::vector<VML::VECTOR2F> uvs;
 
-		std::vector<MeshTriangle> triangles;
+		std::vector<KDTypeMesh> triangles;
 
-		MeshGrid grid;
+		KDTree<KDTypeMesh> tree;
 
 		friend class MeshTriangle;
+		friend Mesh * LoadMeshFromFile(const std::string& filename);
 	};
 
 	Mesh * LoadMeshFromFile(const std::string& filename);

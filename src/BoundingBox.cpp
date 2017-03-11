@@ -185,4 +185,42 @@ namespace RE
 			&& p.y >= min.y && p.y <= max.y
 			&& p.z >= min.z && p.z <= max.z;
 	}
+
+	VML::VECTOR3F BoundingBox::GetCenter()const
+	{
+		return VML::VECTOR3F((min.x + max.x) / 2.0f, (min.y + max.y) / 2.0f, (min.z + max.z) / 2.0f);
+	}
+
+	U8 BoundingBox::LongestAxis()const
+	{
+		VML::VECTOR3F extent(max.x - min.x, max.y - min.y, max.z - min.z);
+		if (extent.x > extent.y && extent.x > extent.z)
+			return 0;
+		else if (extent.y > extent.z)
+			return 1;
+		return 2;
+	}
+
+	void BoundingBox::Extend(const BoundingBox& other)
+	{
+		for (U8 i = 0; i < 3; i++)
+		{
+			min.v[i] = std::min(min.v[i], other.min.v[i]);
+			max.v[i] = std::max(max.v[i], other.max.v[i]);
+		}
+	}
+
+	BoundingBox BoundingBox::TransformBox(const Transform& transform)const
+	{
+		VML::Vector vMin(min);
+		VML::Vector vMax(max);
+
+		return BoundingBox((vMin + transform.position).asVector3(), (vMax + transform.position).asVector3());
+	}
+
+
+	bool BoundingBox::operator==(const BoundingBox& other)const
+	{
+		return (min == other.min) && (max == other.max);
+	}
 }

@@ -1,4 +1,5 @@
 #include <Texture.h>
+#include <sstream>
 
 namespace RE
 {

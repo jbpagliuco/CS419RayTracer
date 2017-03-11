@@ -1,6 +1,6 @@
 
 Camera
-    pos -3.0 3.5 -3.0
+    pos -4.0 3.5 -4.0
     lookat 0.0 1.0 0.0
     up 0.0 1.0 0.0
     type pinhole 1.0 2.0
@@ -15,9 +15,8 @@ Light point  (0.5  1.0 1.0 1.0  -1.0 3.0 1.0  true)
 
 
 // Cache geometry
-@gGrass Geometry mesh Assets/grass.obj
-@gBunny Geometry mesh Assets/bunny.obj
-// @gZebra Geometry mesh Assets/Zebra/zebra.obj
+@gSphere Geometry mesh Assets/sphere.obj
+@gQuad Geometry mesh Assets/quad.obj
 
 
 // Cache textures
@@ -25,24 +24,19 @@ Light point  (0.5  1.0 1.0 1.0  -1.0 3.0 1.0  true)
 
 // Cache materials
 @mFloor Material matte (0.2 1.0  0.8 0.7 0.6 1.0)
-@mGrass Material matte (0.2 1.0  0.3 1.0 0.3 1.0)
-@mBunny Material phong (0.2 2.0  1.0 0.3 0.3 1.0   1.0 1.0 1.0 1.0 1.0 32.0)
+@mSphere Material phong (0.2 2.0  1.0 0.3 0.3 1.0   1.0 1.0 1.0 1.0 1.0 64.0)
+@mQuad Material matte (0.2 2.0   1.0 0.3 0.3 1.0)
 
 
 @floor WorldElement
-    Transform 0.0 0.0 0.0
+    Transform 0.0 -1.0 0.0
     Geometry plane 0.0 1.0 0.0
     Material @mFloor
-    
-@grass WorldElement
-    Transform 0.0 0.0 0.0
-    Geometry @gGrass
-    Material @mGrass
    
-@bunny WorldElement
-    Transform 0.0 1.0 0.0
-    Geometry @gBunny
-    Material @mBunny
+@sphere WorldElement
+    Transform 0.0 0.0 0.0
+    Geometry @gSphere
+    Material @mSphere
     
     
     

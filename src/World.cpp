@@ -9,13 +9,13 @@ namespace RE
 {
 	World::World()
 	{
-		elements = std::vector<WorldElement>();
+		elements = std::vector<KDTypeWorldElement>();
 		lights = std::vector<Light*>();
 	}
 
 	void World::AddElement(const WorldElement& element)
 	{
-		elements.push_back(element);
+		elements.push_back(KDTypeWorldElement(element));
 	}
 
 	void World::DestroyWorld()
@@ -40,7 +40,7 @@ namespace RE
 		}
 	}
 
-	const std::vector<WorldElement>& World::GetWorldElements()const
+	const std::vector<KDTypeWorldElement>& World::GetWorldElements()const
 	{
 		return elements;
 	}
@@ -89,12 +89,17 @@ namespace RE
 
 	void World::CheckRayElementIntersections(ElementIntersection& out, const Ray& ray)const
 	{
-		out = grid.Traverse(ray);
+		RayIntersectionList outHitInfo;
+		KDTypeWorldElement hitElement;
+		out.bHit = tree.Traverse(outHitInfo, ray, hitElement);
+		out.element = hitElement.e;
+		out.ray = ray;
+		out.rayInt = outHitInfo.closestIntersection;
 	}
 
 	void World::CheckRayElementIntersections(bool& bHit, F32 d, const Ray& ray)const
 	{
-		bHit = grid.TraverseShallow(ray, d);
+		bHit = tree.TraverseShallow(ray, d);
 	}
 
 

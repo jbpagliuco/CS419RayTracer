@@ -8,6 +8,7 @@
 #include <AssetManager.h>
 #include <Color.h>
 #include <Grid.h>
+#include <KDTree.h>
 
 namespace RE
 {
@@ -106,7 +107,23 @@ namespace RE
 
 
 
+	class KDTypeWorldElement : public KDType
+	{
+	public:
+		KDTypeWorldElement() = default;
+		KDTypeWorldElement(WorldElement e);
 
+		virtual ~KDTypeWorldElement();
+
+		virtual Geometry* GetGeometry()const override;
+		virtual Transform GetTransform()const override;
+		virtual BoundingBox GetBoundingBox()const override;
+
+	private:
+		WorldElement e;
+
+		friend class World;
+	};
 
 
 	// Holds the world.
@@ -125,7 +142,7 @@ namespace RE
 		void DestroyWorld();
 
 		// Gets a list of all the elements in the world.
-		const std::vector<WorldElement>& GetWorldElements()const;
+		const std::vector<KDTypeWorldElement>& GetWorldElements()const;
 
 		// Sets the camera to render from.
 		// @param pCamera - A pointer to the camera.
@@ -157,10 +174,10 @@ namespace RE
 
 	private:
 		Camera * pCamera;
-		std::vector<WorldElement> elements;
+		std::vector<KDTypeWorldElement> elements;
 		std::vector<Light*> lights;
 
-		WorldGrid grid;
+		KDTree<KDTypeWorldElement> tree;
 	};
 
 }

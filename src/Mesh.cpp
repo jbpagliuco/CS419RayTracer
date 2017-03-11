@@ -34,33 +34,32 @@ namespace RE
 
 	void Mesh::AddFace(const Face& face)
 	{
-		triangles.push_back(MeshTriangle(this, face));
+		MeshTriangle t(this, face);
+		KDTypeMesh kd(t);
+		triangles.push_back(kd);
 	}
 
 	void Mesh::Build()
 	{
-		grid.AddObjects(triangles);
+		tree = KDTree<KDTypeMesh>(triangles);
 	}
 
 	bool Mesh::Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const
 	{
 		Ray transformedRay(ray.GetOrigin() - elementTransform.position, ray.GetDirection());
-
-		MeshTriangleIntersection gi = grid.Traverse(transformedRay);
-		
-		outHitInfo = gi.rl;
-		return gi.bHit;
+		KDTypeMesh hit;
+		return tree.Traverse(outHitInfo, transformedRay, hit);
 	}
 
 	bool Mesh::Intersects(F32& t, const Ray& ray, const Transform& elementTransform)const
 	{
 		Ray transformedRay(ray.GetOrigin() - elementTransform.position, ray.GetDirection());
 
-		return grid.TraverseShallow(transformedRay, F32_MAX);
+		return tree.TraverseShallow(transformedRay, F32_MAX);
 	}
 
 	BoundingBox Mesh::GetBoundingBox()const
 	{
-		return grid.GetBounds();
+		return tree.GetBoundingBox();
 	}
 }

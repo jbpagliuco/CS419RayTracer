@@ -1,7 +1,6 @@
 #pragma once
 
-
-// OpenCV mistakenly (hopefully) reports a lot of memory leaks, so use this 
+// OpenCV reports a lot of memory leaks, so use this 
 // flag to hide opencv to test my code for leaks
 //#define HIDE_OPENCV
 #ifndef HIDE_OPENCV

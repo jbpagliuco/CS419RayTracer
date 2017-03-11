@@ -54,9 +54,9 @@ namespace RE
 		outHitInfo.closestIntersection.t = (F32)t;
 
 		outHitInfo.closestIntersection.normal =
-			(VML::Vector(pMesh->normals[face.v[0].normal]) * (1.0f - beta - gamma)) +
-			(VML::Vector(pMesh->normals[face.v[1].normal]) * beta) +
-			(VML::Vector(pMesh->normals[face.v[2].normal]) * gamma);
+			(VML::Vector(pMesh->normals[face.v[0].normal]) * (1.0f - (F32)beta - (F32)gamma)) +
+			(VML::Vector(pMesh->normals[face.v[1].normal]) * (F32)beta) +
+			(VML::Vector(pMesh->normals[face.v[2].normal]) * (F32)gamma);
 		outHitInfo.closestIntersection.normal.v3Normalize();
 
 		outHitInfo.closestIntersection.worldCoords = ray.GetPointAlongRay((F32)t);
@@ -67,14 +67,14 @@ namespace RE
 			VML::VECTOR2F uv[3] = { pMesh->uvs[face.v[0].uv], pMesh->uvs[face.v[1].uv], pMesh->uvs[face.v[2].uv] };
 			outHitInfo.closestIntersection.uv = VML::VECTOR2F(0.0f, 0.0f);
 
-			outHitInfo.closestIntersection.uv.x += ((1.0f - beta - gamma) * uv[0].x);
-			outHitInfo.closestIntersection.uv.y += ((1.0f - beta - gamma) * (1.0f - uv[0].y));
+			outHitInfo.closestIntersection.uv.x += ((1.0f - (F32)beta - (F32)gamma) * uv[0].x);
+			outHitInfo.closestIntersection.uv.y += ((1.0f - (F32)beta - (F32)gamma) * (1.0f - uv[0].y));
 
-			outHitInfo.closestIntersection.uv.x += (beta * uv[1].x);
-			outHitInfo.closestIntersection.uv.y += (beta * (1.0f - uv[1].y));
+			outHitInfo.closestIntersection.uv.x += ((F32)beta * uv[1].x);
+			outHitInfo.closestIntersection.uv.y += ((F32)beta * (1.0f - uv[1].y));
 
-			outHitInfo.closestIntersection.uv.x += (gamma * uv[2].x);
-			outHitInfo.closestIntersection.uv.y += (gamma * (1.0f - uv[2].y));
+			outHitInfo.closestIntersection.uv.x += ((F32)gamma * uv[2].x);
+			outHitInfo.closestIntersection.uv.y += ((F32)gamma * (1.0f - uv[2].y));
 		}
 
 		outHitInfo.intersections.push_back(outHitInfo.closestIntersection);

@@ -10,16 +10,6 @@
 
 namespace RE
 {
-	
-	
-
-
-	
-
-
-
-
-
 	class Geometry
 	{
 	public:
