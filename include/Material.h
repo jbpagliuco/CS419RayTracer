@@ -18,6 +18,7 @@ namespace RE
 		virtual ~Material();
 
 		virtual Color Shade(const ElementIntersection& ei, World& world);
+		virtual Color AreaLightShade(const ElementIntersection& ei, World& world);
 	};
 
 	class Matte : public Material
@@ -32,6 +33,7 @@ namespace RE
 		virtual ~Matte();
 
 		virtual Color Shade(const ElementIntersection& ei, World& world)override;
+		virtual Color AreaLightShade(const ElementIntersection& ei, World& world)override;
 
 	private:
 		Lambertian ambientBRDF;
@@ -52,6 +54,7 @@ namespace RE
 		virtual ~SVMatte();
 
 		virtual Color Shade(const ElementIntersection& ei, World& world)override;
+		virtual Color AreaLightShade(const ElementIntersection& ei, World& world)override;
 
 	private:
 		SVLambertian ambientBRDF;
@@ -77,12 +80,32 @@ namespace RE
 		virtual ~Phong();
 
 		virtual Color Shade(const ElementIntersection& ei, World& world)override;
+		virtual Color AreaLightShade(const ElementIntersection& ei, World& world)override;
 
 	private:
 		Lambertian ambientBRDF;
 		Lambertian diffuseBRDF;
 		GlossySpecular specularBRDF;
 	};
+
+
+	class Emissive : public Material
+	{
+	public:
+		Emissive(Color c, F32 ls);
+
+		virtual ~Emissive();
+
+		virtual Color Shade(const ElementIntersection& ei, World& world)override;
+		virtual Color AreaLightShade(const ElementIntersection& ei, World& world)override;
+
+		Color GetLe()const;
+
+	private:
+		Color c;
+		F32 ls;
+	};
+
 
 	Material * LoadMaterial(const std::map<std::string, std::string>& params, const World* world);
 	Material * LoadMaterial(const std::string& params, const World* world);

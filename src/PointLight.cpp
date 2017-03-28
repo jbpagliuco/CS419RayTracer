@@ -25,7 +25,7 @@ namespace RE
 		return (position - point).v3Length();
 	}
 
-	VML::Vector PointLight::GetDirectionFromPoint(const VML::Vector& point)const
+	VML::Vector PointLight::GetDirectionFromPoint(const VML::Vector& point)
 	{
 		return (position - point).v3Normalize();
 	}

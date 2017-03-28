@@ -1,23 +1,24 @@
 
 Camera
-    pos -3.0 3.5 -3.0
-    lookat 0.0 1.0 0.0
+    pos 6.0 2 0.0
+    lookat 0.0 0.0 0.0
     up 0.0 1.0 0.0
     type pinhole 1.0 2.0
     
     
-Light ambient  (0.6   1.0 1.0 1.0    0.25)   
-Light parallel  (0.25   1.0 1.0 1.0   -4.0 7.0 4.0)
-Light point  (0.5  1.0 1.0 1.0  0.0 2.0 -2.0  true)
-Light point  (0.5  1.0 1.0 1.0  -1.0 3.0 1.0  true)
+Light ambient  (0.6   0.3 0.3 1.0    0.25)   
+Light parallel  (0.75   1.0 1.0 1.0  4 1 0)
+// Light point  (1.0  1.0 1.0 1.0  3 1 0  true)
+//Light point  (0.5  1.0 1.0 1.0  -1.0 3.0 1.0  true)
 
 
 
 
 // Cache geometry
-@gGrass Geometry mesh Assets/grass.obj
+// @gGrass Geometry mesh Assets/grass.obj
 @gBunny Geometry mesh Assets/bunny.obj
 // @gZebra Geometry mesh Assets/Zebra/zebra.obj
+@gSphere Geometry sphere 1.0
 
 
 // Cache textures
@@ -26,23 +27,23 @@ Light point  (0.5  1.0 1.0 1.0  -1.0 3.0 1.0  true)
 // Cache materials
 @mFloor Material matte (0.2 1.0  0.8 0.7 0.6 1.0)
 @mGrass Material matte (0.2 1.0  0.3 1.0 0.3 1.0)
-@mBunny Material phong (0.2 2.0  1.0 0.3 0.3 1.0   1.0 1.0 1.0 1.0 1.0 32.0)
+@mRed Material phong (0.2 2.0  1.0 0.3 0.3 1.0   1.0 1.0 1.0 1.0 1.0 32.0)
 
 
-@floor WorldElement
-    Transform 0.0 0.0 0.0
-    Geometry plane 0.0 1.0 0.0
-    Material @mFloor
+//@floor WorldElement
+//    Transform 0.0 -1.0 0.0
+//    Geometry plane 0.0 1.0 0.0
+//    Material @mFloor
     
-@grass WorldElement
-    Transform 0.0 0.0 0.0
-    Geometry @gGrass
-    Material @mGrass
+//@grass WorldElement
+//    Transform 0.0 0.0 0.0
+//    Geometry @gGrass
+ //   Material @mGrass
    
 @bunny WorldElement
-    Transform 0.0 1.0 0.0
-    Geometry @gBunny
-    Material @mBunny
+    Transform 0 0 0
+    Geometry @gSphere
+    Material @mRed
     
     
     

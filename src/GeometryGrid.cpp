@@ -53,7 +53,7 @@ namespace RE
 			PObject p = *it;
 
 			RayIntersectionList hitInfo;
-			bool bHit = p->pGeo->Intersects(hitInfo, ray, p->transform);
+			bool bHit = p->pGeo->Intersects(hitInfo, p->transform.TransformRay(ray));
 			if (bHit)
 			{
 				RayIntersection r = hitInfo.closestIntersection;
@@ -86,7 +86,7 @@ namespace RE
 			PObject p = *it;
 
 			F32 t;
-			bool bHit = p->pGeo->Intersects(t, ray, p->transform);
+			bool bHit = p->pGeo->Intersects(t, p->transform.TransformRay(ray));
 			if (bHit && t < d)
 				return true;
 		}

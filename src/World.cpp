@@ -13,7 +13,7 @@ namespace RE
 		lights = std::vector<Light*>();
 	}
 
-	void World::AddElement(const WorldElement& element)
+	void World::AddElement(const Renderable& element)
 	{
 		elements.push_back(KDTypeWorldElement(element));
 	}
@@ -40,11 +40,10 @@ namespace RE
 		}
 	}
 
-	const std::vector<KDTypeWorldElement>& World::GetWorldElements()const
+	const std::vector<KDTypeWorldElement>& World::GetRenderables()const
 	{
 		return elements;
 	}
-
 
 	void World::SetCamera(Camera * pCamera)
 	{
@@ -105,7 +104,7 @@ namespace RE
 
 	Color World::CalculateColor(const ElementIntersection& e)
 	{
-		WorldElement element = e.element;
+		Renderable element = e.element;
 		Material *pMat = element.pMaterial;
 
 		return pMat->Shade(e, *this);

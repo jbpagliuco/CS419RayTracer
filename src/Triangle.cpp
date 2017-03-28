@@ -30,11 +30,11 @@ namespace RE
 		normal = ((b - a).v3Cross((c - a))).v3Normalize();
 	}
 
-	bool Triangle::Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const
+	bool Triangle::Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const
 	{
-		VML::VECTOR3F v1 = (elementTransform.position + VML::Vector(p1)).asVector3();
-		VML::VECTOR3F v2 = (elementTransform.position + VML::Vector(p2)).asVector3();
-		VML::VECTOR3F v3 = (elementTransform.position + VML::Vector(p3)).asVector3();
+		VML::VECTOR3F v1 = p1;
+		VML::VECTOR3F v2 = p2;
+		VML::VECTOR3F v3 = p3;
 
 		F32 a = v1.x - v2.x, b = v1.x - v3.x, c = ray.GetDirection().getX(), d = v1.x - ray.GetOrigin().getX();
 		F32 e = v1.y - v2.y, f = v1.y - v3.y, g = ray.GetDirection().getY(), h = v1.y - ray.GetOrigin().getY();
@@ -80,11 +80,11 @@ namespace RE
 		return true;
 	}
 
-	bool Triangle::Intersects(F32& tmin, const Ray& ray, const Transform& elementTransform)const
+	bool Triangle::Intersects(F32& tmin, const Ray& ray)const
 	{
-		VML::VECTOR3F v1 = (elementTransform.position + VML::Vector(p1)).asVector3();
-		VML::VECTOR3F v2 = (elementTransform.position + VML::Vector(p2)).asVector3();
-		VML::VECTOR3F v3 = (elementTransform.position + VML::Vector(p3)).asVector3();
+		VML::VECTOR3F v1 = p1;
+		VML::VECTOR3F v2 = p2;
+		VML::VECTOR3F v3 = p3;
 
 		F32 a = v1.x - v2.x, b = v1.x - v3.x, c = ray.GetDirection().getX(), d = v1.x - ray.GetOrigin().getX();
 		F32 e = v1.y - v2.y, f = v1.y - v3.y, g = ray.GetDirection().getY(), h = v1.y - ray.GetOrigin().getY();

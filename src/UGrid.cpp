@@ -15,7 +15,8 @@ namespace RE
 			{
 				for (I32 z = -n.Z; z <= n.Z; z++)
 				{
-					Transform transform(VML::VECTOR3F(x * e.X / scalar, y * e.Y / scalar, z * e.Z / scalar));
+					VML::VECTOR3F v(x * e.X / scalar, y * e.Y / scalar, z * e.Z / scalar);
+					Transform transform(v);
 					GeometryGridType g;
 					g.pGeo = pGeo;
 					g.transform = transform;
@@ -34,7 +35,7 @@ namespace RE
 	}
 
 
-	bool UGrid::Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const
+	bool UGrid::Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const
 	{
 		GeometryIntersection g = grid.Traverse(ray);
 		
@@ -42,7 +43,7 @@ namespace RE
 		return g.bHit;
 	}
 
-	bool UGrid::Intersects(F32& t, const Ray& ray, const Transform& elementTransform)const
+	bool UGrid::Intersects(F32& t, const Ray& ray)const
 	{
 		return grid.TraverseShallow(ray, F32_MAX);
 	}

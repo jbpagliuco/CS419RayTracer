@@ -16,10 +16,10 @@ namespace RE
 		this->normal.v3Normalize();
 	}
 
-	bool Plane::Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const
+	bool Plane::Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const
 	{
 		F32 dn = ray.GetDirection().v3Dot(normal);
-		F32 num = (elementTransform.position - ray.GetOrigin()).v3Dot(normal);
+		F32 num = ray.GetOrigin().negate().v3Dot(normal);
 
 		if (VML::FEquals(dn, 0.0f))
 			return false;
@@ -40,10 +40,10 @@ namespace RE
 		return false;
 	}
 
-	bool Plane::Intersects(F32& tmin, const Ray& ray, const Transform& elementTransform)const
+	bool Plane::Intersects(F32& tmin, const Ray& ray)const
 	{
 		F32 dn = ray.GetDirection().v3Dot(normal);
-		F32 num = (elementTransform.position - ray.GetOrigin()).v3Dot(normal);
+		F32 num = ray.GetOrigin().negate().v3Dot(normal);
 
 		if (VML::FEquals(dn, 0.0f))
 			return false;

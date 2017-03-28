@@ -24,9 +24,9 @@ namespace RE
 
 
 
-	Color OrthographicCamera::RenderPixel(U32 row, U32 col, World* pWorld)
+	Color OrthographicCamera::RenderPixel(U32 row, U32 col, World* pWorld, U32 threadIdx)
 	{
-		VML::VECTOR3F pixelCoords = vp.GetUnitSquareSample(row, col);
+		VML::VECTOR3F pixelCoords = vp.GetUnitSquareSample(row, col, threadIdx);
 		pixelCoords.x *= halfWidth;
 		pixelCoords.y *= halfWidth;
 		VML::Vector rayOriginWorld = (u * pixelCoords.x) + (v * pixelCoords.y);

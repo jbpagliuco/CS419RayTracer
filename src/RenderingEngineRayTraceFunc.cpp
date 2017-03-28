@@ -21,7 +21,7 @@ namespace RE
 		auto start = GetTime();
 
 		// Run ray tracer
-		const ColorBuffer2D& result = pCamera->RenderScene(pWorld);
+		RenderScene();
 		
 		// Total running time for the ray tracer
 		U64 elapsedTime = DiffTime(start, GetTime());
@@ -34,9 +34,11 @@ namespace RE
 		U32 numSamples = pCamera->GetViewport().GetSampler()->GetNumSamples();
 
 		// Other stats
-		U64 numWorldElements = pWorld->GetWorldElements().size();
+		U64 numWorldElements = pWorld->GetRenderables().size();
 		U64 numPrimaryRays = numSamples * width * height;
 		U64 numLights = pWorld->GetLights().size();
+
+		D64 averageTPP = (D64)elapsedTime / ((D64)width * (D64)height);
 
 		std::stringstream ss;
 		ss <<
@@ -46,10 +48,14 @@ namespace RE
 			"\nNumber of lights in world: " << numLights <<
 			"\nNumber of samples per pixel: " << numSamples <<
 			"\nTotal number of rays shot: " << numPrimaryRays <<
+			"\nNumber of threads used: " << (U32)numThreads << 
 			"\nRender target stats: " <<
 			"\n\tResolution: " << width << "x" << height <<
 			"\n\tTotal number of pixels rendered: " << width * height <<
-			"\n\tAverage time per pixel: " << (D64)elapsedTime / ((D64)width * (D64)height) << " usec" <<
+			"\n\tAverage time per pixel: " << averageTPP << " usec" <<
+			"\n\tAverage time per pixel per sample: " << averageTPP / numSamples << " usec" <<
+			"\n\tAverage time per pixel per thread: " << averageTPP / numThreads << " usec" <<
+			"\n\tAverage time per pixel per thread per sample: " << averageTPP / numThreads / numSamples << " usec" <<
 			"\n------------------------------------------------------------";
 
 		// Dump stats to console
@@ -61,18 +67,27 @@ namespace RE
 		_mkdir(outputFolder.c_str());
 
 		std::stringstream outputFileSS;
-		if (outputFilename == "")
+		if (outputFilename != "")
+			outputFileSS << outputFolder << "/" << outputFilename;
+		else if (bUseMultiThreading)
+		{
+			outputFileSS << outputFolder << "/result-" <<
+				width << "x" << height << "-" <<
+				numSamples << "SAMPLES" << "-" <<
+				(U32)numThreads << "THREADS" << 
+				".png";
+		}
+		else
 		{
 			outputFileSS << outputFolder << "/result-" <<
 				width << "x" << height << "-" <<
 				numSamples << "SAMPLES" <<
 				".png";
 		}
-		else
-			outputFileSS << outputFolder << "/" << outputFilename;
+		
 		RE_LOG(RENDER_ENG, RUNTIME, "Writing result image to " << outputFileSS.str());
 
-		result.SaveToImage(outputFileSS.str());
+		renderBuffer.SaveToImage(outputFileSS.str());
 
 		outputFileSS << ".stats";
 		RE_LOG(RENDER_ENG, RUNTIME, "Writing result stats to " << outputFileSS.str());

@@ -21,6 +21,11 @@ namespace RE
 		return Color();
 	}
 
+	Color Material::AreaLightShade(const ElementIntersection& ei, World& world)
+	{
+		return Color();
+	}
+
 
 
 

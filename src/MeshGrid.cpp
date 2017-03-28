@@ -51,7 +51,7 @@ namespace RE
 			const MeshTriangle * p = *it;
 
 			RayIntersectionList hitInfo;
-			bool bHit = p->Intersects(hitInfo, ray, Transform());
+			bool bHit = p->Intersects(hitInfo, ray);
 			if (bHit)
 			{
 				RayIntersection r = hitInfo.closestIntersection;
@@ -84,7 +84,7 @@ namespace RE
 			const MeshTriangle * p = *it;
 
 			F32 t;
-			bool bHit = p->Intersects(t, ray, Transform());
+			bool bHit = p->Intersects(t, ray);
 			if (bHit && t < d)
 				return true;
 		}

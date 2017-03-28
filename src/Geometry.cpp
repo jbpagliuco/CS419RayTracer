@@ -12,6 +12,26 @@ namespace RE
 		return true;
 	}
 
+	F32 Geometry::PDF(const ElementIntersection& ei)const
+	{
+		return 0.0f;
+	}
+
+	VML::Vector Geometry::Sample()
+	{
+		return VML::VectorZero();
+	}
+
+
+	VML::Vector Geometry::GetNormalAtPoint(const VML::Vector& p)const
+	{
+		return VML::VectorZero();
+	}
+
+
+
+
+
 	Geometry * LoadGeometry(const std::map<std::string, std::string>& params, const World* world)
 	{
 		std::string type = params.at("type");

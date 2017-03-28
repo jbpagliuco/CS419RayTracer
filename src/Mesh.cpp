@@ -44,18 +44,15 @@ namespace RE
 		tree = KDTree<KDTypeMesh>(triangles);
 	}
 
-	bool Mesh::Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const
+	bool Mesh::Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const
 	{
-		Ray transformedRay(ray.GetOrigin() - elementTransform.position, ray.GetDirection());
 		KDTypeMesh hit;
-		return tree.Traverse(outHitInfo, transformedRay, hit);
+		return tree.Traverse(outHitInfo, ray, hit);
 	}
 
-	bool Mesh::Intersects(F32& t, const Ray& ray, const Transform& elementTransform)const
+	bool Mesh::Intersects(F32& t, const Ray& ray)const
 	{
-		Ray transformedRay(ray.GetOrigin() - elementTransform.position, ray.GetDirection());
-
-		return tree.TraverseShallow(transformedRay, F32_MAX);
+		return tree.TraverseShallow(ray, F32_MAX);
 	}
 
 	BoundingBox Mesh::GetBoundingBox()const

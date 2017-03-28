@@ -3,6 +3,7 @@
 #include <string>
 #include <World.h>
 #include <Camera.h>
+#include <ThreadUtil.h>
 
 namespace RE
 {
@@ -28,11 +29,31 @@ namespace RE
 		// Unload the rendering engine components.
 		void Unload();
 
+	private:
+		void RenderScene();
+		void RenderScene_Single();
+		void RenderScene_Multi();
+
+		struct ThreadData
+		{
+			ThreadData() {}
+			ThreadData(U32 startRow, U32 startCol, U32 endRow, U32 endCol) :
+				startRow(startRow), startCol(startCol), endRow(endRow), endCol(endCol) {}
+
+			U32 startRow, startCol;
+			U32 endRow, endCol;
+		};
+		void RenderScene_ThreadFunc(U32 idx, World* pWorld, ThreadOutput* out, TaskQueue<ThreadData>* q);
+
 	public:
 		static U32 NumSamples;
 		static SamplerGenerator SamplerFunc;
 
 	private:
+		ColorBuffer2D renderBuffer;
+		Buffer2D<F32> depthBuffer;
+		ImageTracker imageTracker;
+
 		Camera *pCamera;
 		Color bkgColor;
 		Viewport vp;
@@ -41,5 +62,8 @@ namespace RE
 
 		std::string outputFolder;
 		std::string outputFilename;
+
+		bool bUseMultiThreading;
+		U8 numThreads;
 	};
 }

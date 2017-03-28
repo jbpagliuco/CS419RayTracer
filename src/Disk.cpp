@@ -8,20 +8,19 @@ namespace RE
 		this->normal.v3Normalize();
 	}
 
-	bool Disk::Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const
+	bool Disk::Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const
 	{
 		F32 dn = ray.GetDirection().v3Dot(normal);
 		if (VML::FEquals(dn, 0.0f))
 			return false;
 
-		VML::Vector center = elementTransform.position;
-		F32 t = (center - ray.GetOrigin()).v3Dot(normal) / dn;
+		F32 t = ray.GetOrigin().negate().v3Dot(normal) / dn;
 		if (t <= VML::FLOAT_EPSILON)
 			return false;
 
 		VML::Vector p = ray.GetPointAlongRay(t);
 
-		F32 distSqr = (center - p).v3LengthSq();
+		F32 distSqr = p.v3LengthSq();
 		if (distSqr < radiusSq)
 		{
 			RayIntersection r;
@@ -39,20 +38,19 @@ namespace RE
 		return false;
 	}
 
-	bool Disk::Intersects(F32& tmin, const Ray& ray, const Transform& elementTransform)const
+	bool Disk::Intersects(F32& tmin, const Ray& ray)const
 	{
 		F32 dn = ray.GetDirection().v3Dot(normal);
 		if (VML::FEquals(dn, 0.0f))
 			return false;
 
-		VML::Vector center = elementTransform.position;
-		F32 t = (center - ray.GetOrigin()).v3Dot(normal) / dn;
+		F32 t = ray.GetOrigin().negate().v3Dot(normal) / dn;
 		if (t <= VML::FLOAT_EPSILON)
 			return false;
 
 		VML::Vector p = ray.GetPointAlongRay(t);
 
-		F32 distSqr = (center - p).v3LengthSq();
+		F32 distSqr = p.v3LengthSq();
 		if (distSqr < radiusSq)
 		{
 			tmin = t;
