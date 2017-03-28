@@ -190,6 +190,7 @@ namespace RE
 		wfr.ReadFromFile(file, this);
 
 		RE_LOG(WORLD, INIT, "Creating world grid");
-		tree = KDTree<KDTypeWorldElement>(elements);
+		//tree = KDTree<KDTypeWorldElement>(elements);
+		grid.AddObjects(elements);
 	}
 }

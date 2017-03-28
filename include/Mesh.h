@@ -183,9 +183,11 @@ namespace RE
 		std::vector<VML::VECTOR3F> normals;
 		std::vector<VML::VECTOR2F> uvs;
 
-		std::vector<KDTypeMesh> triangles;
+		//std::vector<KDTypeMesh> triangles;
+		std::vector<MeshTriangle> triangles;
 
-		KDTree<KDTypeMesh> tree;
+		//KDTree<KDTypeMesh> tree;
+		MeshGrid grid;
 
 		friend class MeshTriangle;
 		friend Mesh * LoadMeshFromFile(const std::string& filename);

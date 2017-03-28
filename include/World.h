@@ -126,7 +126,8 @@ namespace RE
 		void DestroyWorld();
 
 		// Gets a list of all the elements in the world.
-		const std::vector<KDTypeWorldElement>& GetRenderables()const;
+		//const std::vector<KDTypeWorldElement>& GetRenderables()const;
+		const std::vector<Renderable>& GetRenderables()const;
 
 		// Sets the camera to render from.
 		// @param pCamera - A pointer to the camera.
@@ -158,10 +159,12 @@ namespace RE
 
 	private:
 		Camera * pCamera;
-		std::vector<KDTypeWorldElement> elements;
+		//std::vector<KDTypeWorldElement> elements;
+		std::vector<Renderable> elements;
 		std::vector<Light*> lights;
 
-		KDTree<KDTypeWorldElement> tree;
+		//KDTree<KDTypeWorldElement> tree;
+		WorldGrid grid;
 	};
 
 }
