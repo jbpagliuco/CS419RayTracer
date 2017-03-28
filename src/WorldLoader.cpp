@@ -56,7 +56,7 @@ namespace RE
 	{
 		World * p = (World*)pWorld;
 		
-		WorldElement e(name);
+		Renderable e(name);
 		e.transform = LoadTransform(params["Transform"]);
 		
 		std::string geometry = params["Geometry"];
@@ -189,34 +189,8 @@ namespace RE
 
 		wfr.ReadFromFile(file, this);
 
-		/*I32 n = 22;
-		for (I32 x = -n; x <= n; x++)
-		{
-			RE_LOG_SAMELINE(WORLD, INIT, "X = " << x);
-			for (I32 y = -n; y <= n; y++)
-			{
-				for (I32 z = -n; z <= n; z++)
-				{
-					F32 m = 3.0f;
-					TypeParams params;
-					params["Transform"] = std::to_string(m * x) + " " + std::to_string(m * y) + " " + std::to_string(m * z);
-					params["Geometry"] = "@gSphere";
-
-					I32 i = RandInt(0, 3);
-					if (i == 0)
-						params["Material"] = "@mSphereRed";
-					else if (i == 1)
-						params["Material"] = "@mSphereGreen";
-					else
-						params["Material"] = "@mSphereBlue";
-					LoadWorldElement("", params, this);
-				}
-			}
-		}
-		RE_LOG_NEWLINE();*/
-
 		RE_LOG(WORLD, INIT, "Creating world grid");
-		//grid.AddObjects(elements);
-		tree = KDTree<KDTypeWorldElement>(elements);
+		//tree = KDTree<KDTypeWorldElement>(elements);
+		grid.AddObjects(elements);
 	}
 }

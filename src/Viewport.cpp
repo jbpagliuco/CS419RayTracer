@@ -4,14 +4,17 @@
 
 namespace RE
 {
-	Viewport::Viewport(U32 width, U32 height, SamplerGenerator samplerType, I32 numSamples)
+	Viewport::Viewport(U32 width, U32 height, SamplerGenerator samplerType, I32 numSamples, U32 numThreads)
 	{
 		this->width = width;
 		this->height = height;
 		this->pixelWidth = 2.0f / (F32)width;
 
-		sampler = Sampler(numSamples);
-		sampler.GenerateSamples(samplerType);
+		for (I32 i = 0; i < (I32)numThreads; i++)
+		{
+			samplers.push_back(Sampler(numSamples));
+			samplers[i].GenerateSamples(samplerType);
+		}
 	}
 
 	VML::VECTOR3F Viewport::GetPixelCenter(U32 row, U32 col)const
@@ -26,11 +29,11 @@ namespace RE
 		return p;
 	}
 
-	VML::VECTOR3F Viewport::GetUnitSquareSample(U32 row, U32 col)
+	VML::VECTOR3F Viewport::GetUnitSquareSample(U32 row, U32 col, U32 threadIdx)
 	{
 		assert(row >= 0 && row < height && col >= 0 && col < width);
 
-		VML::VECTOR2F sp = sampler.SampleUnitSquare();
+		VML::VECTOR2F sp = samplers[threadIdx].SampleUnitSquare();
 
 		VML::VECTOR3F p;
 		p.x = pixelWidth * (col - (width / 2.0f) + sp.x);
@@ -41,9 +44,9 @@ namespace RE
 	}
 
 
-	Sampler * Viewport::GetSampler()
+	Sampler * Viewport::GetSampler(U32 threadIdx)
 	{
-		return &sampler;
+		return &(samplers[threadIdx]);
 	}
 
 

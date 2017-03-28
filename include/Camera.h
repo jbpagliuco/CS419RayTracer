@@ -18,7 +18,7 @@ namespace RE
 		// @param height - The height of the viewport.
 		// @param samplerType - The type of sampler to use.
 		// @param numSamples - The number of samples to use.
-		Viewport(U32 width, U32 height, SamplerGenerator samplerType, I32 numSamples);
+		Viewport(U32 width, U32 height, SamplerGenerator samplerType, I32 numSamples, U32 numThreads = 1);
 
 		// Get the center (in world coordinates) on the pixel at (row, col).
 		// @param row - The row of the pixel.
@@ -26,9 +26,9 @@ namespace RE
 		// @return The 3D world coordinates of this pixel.
 		VML::VECTOR3F GetPixelCenter(U32 row, U32 col)const;
 
-		Sampler* GetSampler();
+		Sampler* GetSampler(U32 threadIdx = 0);
 
-		VML::VECTOR3F GetUnitSquareSample(U32 row, U32 col);
+		VML::VECTOR3F GetUnitSquareSample(U32 row, U32 col, U32 threadIdx = 0);
 
 		void ScalePixelWidth(F32 scale);
 
@@ -40,7 +40,7 @@ namespace RE
 	private:
 		U32 width, height;
 		F32 pixelWidth;
-		Sampler sampler;
+		std::vector<Sampler> samplers;
 	};
 
 
@@ -62,16 +62,11 @@ namespace RE
 		// Sets the background color.
 		void SetBackgroundColor(Color color);
 
-		// Renders the scene from the viewpoint of this camera.
-		// @param pWorld - A pointer to the world to render.
-		// @return The resulting color buffer.
-		virtual const ColorBuffer2D& RenderScene(World* pWorld);
-
 		// Renders a single pixel.
 		// @param row - The pixel's row.
 		// @param col - The pixel's column.
 		// @param pWorld - A pointer to the world to render.
-		virtual Color RenderPixel(U32 row, U32 col, World* pWorld) = 0;
+		virtual Color RenderPixel(U32 row, U32 col, World* pWorld, U32 threadIdx = 0) = 0;
 
 		// Gets the position of this camera.
 		VML::Vector GetPosition()const;
@@ -87,9 +82,7 @@ namespace RE
 		Viewport vp;
 		Color backgroundColor;
 
-		ColorBuffer2D renderBuffer;
-		Buffer2D<F32> depthBuffer;
-		ImageTracker imageTracker;
+		friend class RenderingEngine;
 	};
 
 	
@@ -110,7 +103,7 @@ namespace RE
 		// @param row - The pixel's row.
 		// @param col - The pixel's column.
 		// @param pWorld - A pointer to the world to render.
-		virtual Color RenderPixel(U32 row, U32 col, World* pWorld);
+		virtual Color RenderPixel(U32 row, U32 col, World* pWorld, U32 threadIdx = 0);
 
 	protected:
 		VML::Vector forwardDirection;
@@ -140,7 +133,7 @@ namespace RE
 		// @param row - The pixel's row.
 		// @param col - The pixel's column.
 		// @param pWorld - A pointer to the world to render.
-		virtual Color RenderPixel(U32 row, U32 col, World* pWorld);
+		virtual Color RenderPixel(U32 row, U32 col, World* pWorld, U32 threadIdx = 0);
 
 	protected:
 		// Distance to the viewplane

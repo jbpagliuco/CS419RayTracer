@@ -9,13 +9,14 @@ namespace RE
 {
 	World::World()
 	{
-		elements = std::vector<KDTypeWorldElement>();
+		//elements = std::vector<KDTypeWorldElement>();
 		lights = std::vector<Light*>();
 	}
 
-	void World::AddElement(const WorldElement& element)
+	void World::AddElement(const Renderable& element)
 	{
-		elements.push_back(KDTypeWorldElement(element));
+		//elements.push_back(KDTypeWorldElement(element));
+		elements.push_back(element);
 	}
 
 	void World::DestroyWorld()
@@ -40,11 +41,15 @@ namespace RE
 		}
 	}
 
-	const std::vector<KDTypeWorldElement>& World::GetWorldElements()const
+	/*const std::vector<KDTypeWorldElement>& World::GetRenderables()const
+	{
+		return elements;
+	}*/
+
+	const std::vector<Renderable>& World::GetRenderables()const
 	{
 		return elements;
 	}
-
 
 	void World::SetCamera(Camera * pCamera)
 	{
@@ -91,21 +96,24 @@ namespace RE
 	{
 		RayIntersectionList outHitInfo;
 		KDTypeWorldElement hitElement;
-		out.bHit = tree.Traverse(outHitInfo, ray, hitElement);
+		/*out.bHit = tree.Traverse(outHitInfo, ray, hitElement);
 		out.element = hitElement.e;
 		out.ray = ray;
-		out.rayInt = outHitInfo.closestIntersection;
+		out.rayInt = outHitInfo.closestIntersection;*/
+		
+		out = grid.Traverse(ray);
 	}
 
 	void World::CheckRayElementIntersections(bool& bHit, F32 d, const Ray& ray)const
 	{
-		bHit = tree.TraverseShallow(ray, d);
+		//bHit = tree.TraverseShallow(ray, d);
+		bHit = grid.TraverseShallow(ray, d);
 	}
 
 
 	Color World::CalculateColor(const ElementIntersection& e)
 	{
-		WorldElement element = e.element;
+		Renderable element = e.element;
 		Material *pMat = element.pMaterial;
 
 		return pMat->Shade(e, *this);

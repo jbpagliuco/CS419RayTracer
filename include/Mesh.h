@@ -41,14 +41,14 @@ namespace RE
 		// @param ray - The ray to check against.
 		// @param elementTransform - The transform of the WorldElement that uses this geometry.
 		// @return Does the ray intersect this geometry?
-		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const override;
+		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const override;
 
 		// Checks to see if a ray intersects this geometry, but doesn't calculate any normals, etc.
 		// @param [out] t - The t value for this ray, if there is an intersection point.
 		// @param ray - The ray to check against.
 		// @param elementTransform - The transform of the WorldElement that uses this geometry.
 		// @return Does the ray intersect this geometry?
-		virtual bool Intersects(F32& t, const Ray& ray, const Transform& elementTransform)const override;
+		virtual bool Intersects(F32& t, const Ray& ray)const override;
 
 		// Gets the bounding box for this geometry.
 		virtual BoundingBox GetBoundingBox()const override;
@@ -166,14 +166,14 @@ namespace RE
 		// @param ray - The ray to check against.
 		// @param elementTransform - The transform of the WorldElement that uses this geometry.
 		// @return Does the ray intersect this geometry?
-		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const override;
+		virtual bool Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const override;
 
 		// Checks to see if a ray intersects this geometry, but doesn't calculate any normals, etc.
 		// @param [out] t - The t value for this ray, if there is an intersection point.
 		// @param ray - The ray to check against.
 		// @param elementTransform - The transform of the WorldElement that uses this geometry.
 		// @return Does the ray intersect this geometry?
-		virtual bool Intersects(F32& t, const Ray& ray, const Transform& elementTransform)const override;
+		virtual bool Intersects(F32& t, const Ray& ray)const override;
 
 		// Gets the bounding box for this geometry.
 		virtual BoundingBox GetBoundingBox()const override;
@@ -183,9 +183,11 @@ namespace RE
 		std::vector<VML::VECTOR3F> normals;
 		std::vector<VML::VECTOR2F> uvs;
 
-		std::vector<KDTypeMesh> triangles;
+		//std::vector<KDTypeMesh> triangles;
+		std::vector<MeshTriangle> triangles;
 
-		KDTree<KDTypeMesh> tree;
+		//KDTree<KDTypeMesh> tree;
+		MeshGrid grid;
 
 		friend class MeshTriangle;
 		friend Mesh * LoadMeshFromFile(const std::string& filename);

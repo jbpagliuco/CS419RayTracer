@@ -17,6 +17,7 @@ namespace RE
 		virtual Geometry* GetGeometry()const = 0;
 		virtual Transform GetTransform()const = 0;
 		virtual BoundingBox GetBoundingBox()const = 0;
+		virtual BoundingBox GetTransformedBBox()const;
 	};
 
 	// A node of a KDTree.
@@ -145,7 +146,7 @@ namespace RE
 		F32 sum = 0.0f;
 		for (auto it = elements.begin(); it != elements.end(); it++)
 		{
-			BoundingBox bb = it->GetGeometry()->GetBoundingBox();
+			BoundingBox bb = it->GetBoundingBox();
 			sum += bb.GetCenter().v[axis];
 		}
 
@@ -157,7 +158,7 @@ namespace RE
 	{
 		for (auto it = elements.begin(); it != elements.end(); it++)
 		{
-			BoundingBox bb = it->GetGeometry()->GetBoundingBox();
+			BoundingBox bb = it->GetBoundingBox();
 
 			if (bb.GetCenter().v[axis] <= midpoint)
 				left.push_back(*it);
@@ -169,29 +170,14 @@ namespace RE
 	template <typename T>
 	bool KDNode<T>::Traverse(RayIntersectionList& outHitInfo, const Ray& ray, T& hit)const
 	{
+		VML::Vector wo = ray.GetDirection().negate();
+
 		if (bb.Intersects(outHitInfo, ray))
 		{
-			RayIntersectionList rOut;
-			bool bLeftHit = false, bRightHit = false;
-			if (left)
-				bLeftHit = left->Traverse(outHitInfo, ray, hit);
-			if (right)
-				bRightHit = right->Traverse(rOut, ray, hit);
-						
-			if (bLeftHit && bRightHit)
-			{
-				if (rOut.closestIntersection.t < outHitInfo.closestIntersection.t)
-					outHitInfo = rOut;
+			if ((left  && left->Traverse(outHitInfo, ray, hit)) ||
+				(right && right->Traverse(outHitInfo, ray, hit)))
 				return true;
-			}
-			else if (bLeftHit)
-				return true;
-			else if (bRightHit)
-			{
-				outHitInfo = rOut;
-				return true;
-			}
-			
+
 			F32 tMin = F32_MAX;
 			bool bHit = false;
 			for (auto it = elements.begin(); it != elements.end(); it++)
@@ -200,15 +186,19 @@ namespace RE
 				Geometry * g = e.GetGeometry();
 
 				RayIntersectionList out;
-				if (g->Intersects(out, ray, e.GetTransform()) && out.closestIntersection.t < tMin)
+				if (g->Intersects(out, ray) && out.closestIntersection.t < tMin)
 				{
 					bHit = true;
 					outHitInfo = out;
 					tMin = out.closestIntersection.t;
 					hit = e;
+
+					// Check if we have to reverse the normal
+					/*if (outHitInfo.closestIntersection.normal.v3Dot(wo) < 0.0f)
+						outHitInfo.closestIntersection.normal.negate();*/
 				}
 			}
-			return bHit;				
+			return bHit;
 		}
 		return false;
 	}
@@ -229,7 +219,7 @@ namespace RE
 				Geometry * g = e.GetGeometry();
 				
 				F32 t;
-				bool bHit = g->Intersects(t, ray, e.GetTransform());
+				bool bHit = g->Intersects(t, ray);
 				if (bHit && t < maxDist)
 					return true;
 			}
@@ -272,7 +262,7 @@ namespace RE
 		{
 			T e = *it;
 			RayIntersectionList out;
-			if (e.GetGeometry()->Intersects(out, ray, e.GetTransform()) && out.closestIntersection.t < outHitInfo.closestIntersection.t)
+			if (e.GetGeometry()->Intersects(out, ray) && out.closestIntersection.t < outHitInfo.closestIntersection.t)
 			{
 				outHitInfo = out;
 				bHit = true;
@@ -295,7 +285,7 @@ namespace RE
 			Geometry* g = e.GetGeometry();
 
 			F32 t;
-			bool bHit = g->Intersects(t, ray, e.GetTransform());
+			bool bHit = g->Intersects(t, ray);
 			if (bHit && t < maxDist)
 				return true;
 		}

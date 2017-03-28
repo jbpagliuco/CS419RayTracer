@@ -28,4 +28,15 @@ namespace RE
 
 		return bHit;
 	}
+
+
+	F32 Light::G(const ElementIntersection& ei)const
+	{
+		return 0.0f;
+	}
+
+	F32 Light::PDF(const ElementIntersection& ei)const
+	{
+		return 0.0f;
+	}
 }

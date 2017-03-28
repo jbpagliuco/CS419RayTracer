@@ -22,7 +22,7 @@ namespace RE
 		return 0.0f;
 	}
 
-	VML::Vector AmbientLight::GetDirectionFromPoint(const VML::Vector& point)const
+	VML::Vector AmbientLight::GetDirectionFromPoint(const VML::Vector& point)
 	{
 		return VML::VectorZero();
 	}

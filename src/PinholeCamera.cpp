@@ -22,9 +22,9 @@ namespace RE
 		this->vp.ScalePixelWidth(zoom);
 	}
 
-	Color PinholeCamera::RenderPixel(U32 row, U32 col, World* pWorld)
+	Color PinholeCamera::RenderPixel(U32 row, U32 col, World* pWorld, U32 threadIdx)
 	{
-		VML::VECTOR3F pixelCoords = vp.GetUnitSquareSample(row, col);
+		VML::VECTOR3F pixelCoords = vp.GetUnitSquareSample(row, col, threadIdx);
 		VML::Vector rayDir = ((u * pixelCoords.x) + (v * pixelCoords.y) - (w * d)).v3Normalize();
 		Ray ray(eye, rayDir);
 

@@ -9,7 +9,7 @@ namespace RE
 
 	}
 
-	Transform::Transform(const VML::VECTOR3F position) : position(position)
+	Transform::Transform(const VML::VECTOR3F& position) : position(position)
 	{
 
 	}
@@ -22,6 +22,12 @@ namespace RE
 	Transform::~Transform()
 	{
 
+	}
+
+
+	Ray Transform::TransformRay(const Ray& ray)const
+	{
+		return Ray(ray.GetOrigin() - position, ray.GetDirection());
 	}
 
 

@@ -14,7 +14,7 @@ namespace RE
 
 	}
 
-	void WorldGrid::AddObject(const WorldElement& object)
+	void WorldGrid::AddObject(const Renderable& object)
 	{
 		// Planes, etc don't have bounding boxes
 		if (object.pGeometry->HasBounds())
@@ -34,7 +34,7 @@ namespace RE
 		}
 	}
 
-	void WorldGrid::PlaceObject(const WorldElement* pObject)
+	void WorldGrid::PlaceObject(const Renderable* pObject)
 	{
 		if (pObject->pGeometry->HasBounds())
 		{
@@ -56,7 +56,7 @@ namespace RE
 	WorldGrid::ObjectIntersectionOutput WorldGrid::CheckObjectIntersections(ElementIntersection& out, const Ray& ray, const PObjects objects)const
 	{
 		// Keep track of the closest element
-		F32 minDepth = out.bHit ? out.rayInt.t : 100000000.0f;
+		F32 minDepth = out.bHit ? out.rayInt.t : F32_MAX;
 		VML::Vector wo = ray.GetDirection();
 		wo.negate();
 
@@ -64,10 +64,10 @@ namespace RE
 
 		for (auto it = objects.begin(); it != objects.end(); it++)
 		{
-			const WorldElement * pWE = *it;
+			const Renderable * pWE = *it;
 
 			RayIntersectionList hitInfo;
-			bool bHit = pWE->pGeometry->Intersects(hitInfo, ray, pWE->transform);
+			bool bHit = pWE->pGeometry->Intersects(hitInfo, pWE->transform.TransformRay(ray));
 			if (bHit)
 			{
 				RayIntersection r = hitInfo.closestIntersection;
@@ -84,13 +84,13 @@ namespace RE
 					out.rayInt = r;
 					out.ray = ray;
 					minDepth = newDepth;
-
-					// Check if we have to reverse the normal
-					if (r.normal.v3Dot(wo) < 0.0f)
-						out.rayInt.normal.negate();
 				}
 			}
 		}
+
+		// Check if we have to reverse the normal
+		if (out.rayInt.normal.v3Dot(wo) < 0.0f)
+			out.rayInt.normal.negate();
 
 		return oiOut;
 	}
@@ -98,16 +98,16 @@ namespace RE
 	bool WorldGrid::CheckShallowObjectIntersections(const Ray& ray, F32 d, const PObjects objects)const
 	{
 		// Keep track of the closest element
-		F32 minDepth = 100000000.0f;
+		F32 minDepth = F32_MAX;
 		VML::Vector wo = ray.GetDirection();
 		wo.negate();
 
 		for (auto it = objects.begin(); it != objects.end(); it++)
 		{
-			const WorldElement* pWE = *it;
+			const Renderable* pWE = *it;
 
 			F32 t;
-			bool bHit = pWE->pGeometry->Intersects(t, ray, pWE->transform);
+			bool bHit = pWE->pGeometry->Intersects(t, pWE->transform.TransformRay(ray));
 			if (bHit && t < d)
 				return true;
 		}

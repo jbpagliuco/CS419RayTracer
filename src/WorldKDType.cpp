@@ -2,7 +2,7 @@
 
 namespace RE
 {
-	KDTypeWorldElement::KDTypeWorldElement(WorldElement e) : e(e)
+	KDTypeWorldElement::KDTypeWorldElement(Renderable e) : e(e)
 	{
 
 	}
@@ -24,6 +24,6 @@ namespace RE
 
 	BoundingBox KDTypeWorldElement::GetBoundingBox()const
 	{
-		return e.pGeometry->GetBoundingBox().TransformBox(e.transform);
+		return e.pGeometry->GetBoundingBox();
 	}
 }

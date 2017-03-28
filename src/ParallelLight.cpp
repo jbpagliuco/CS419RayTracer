@@ -22,7 +22,7 @@ namespace RE
 		return std::numeric_limits<F32>::infinity();
 	}
 
-	VML::Vector ParallelLight::GetDirectionFromPoint(const VML::Vector& point)const
+	VML::Vector ParallelLight::GetDirectionFromPoint(const VML::Vector& point)
 	{
 		return direction;
 	}

@@ -14,11 +14,11 @@ namespace RE
 
 	}
 
-	bool MeshTriangle::Intersects(RayIntersectionList& outHitInfo, const Ray& ray, const Transform& elementTransform)const
+	bool MeshTriangle::Intersects(RayIntersectionList& outHitInfo, const Ray& ray)const
 	{
-		VML::VECTOR3F v0 = (elementTransform.position + VML::Vector(pMesh->positions[face.v[0].vertex])).asVector3();
-		VML::VECTOR3F v1 = (elementTransform.position + VML::Vector(pMesh->positions[face.v[1].vertex])).asVector3();
-		VML::VECTOR3F v2 = (elementTransform.position + VML::Vector(pMesh->positions[face.v[2].vertex])).asVector3();
+		VML::VECTOR3F v0 = pMesh->positions[face.v[0].vertex];
+		VML::VECTOR3F v1 = pMesh->positions[face.v[1].vertex];
+		VML::VECTOR3F v2 = pMesh->positions[face.v[2].vertex];
 
 		D64 a = v0.x - v1.x, b = v0.x - v2.x, c = ray.GetDirection().getX(), d = v0.x - ray.GetOrigin().getX();
 		D64 e = v0.y - v1.y, f = v0.y - v2.y, g = ray.GetDirection().getY(), h = v0.y - ray.GetOrigin().getY();
@@ -57,6 +57,7 @@ namespace RE
 			(VML::Vector(pMesh->normals[face.v[0].normal]) * (1.0f - (F32)beta - (F32)gamma)) +
 			(VML::Vector(pMesh->normals[face.v[1].normal]) * (F32)beta) +
 			(VML::Vector(pMesh->normals[face.v[2].normal]) * (F32)gamma);
+		outHitInfo.closestIntersection.normal = VML::Vector(pMesh->normals[face.v[0].normal]);
 		outHitInfo.closestIntersection.normal.v3Normalize();
 
 		outHitInfo.closestIntersection.worldCoords = ray.GetPointAlongRay((F32)t);
@@ -83,11 +84,11 @@ namespace RE
 		return true;
 	}
 
-	bool MeshTriangle::Intersects(F32& tmin, const Ray& ray, const Transform& elementTransform)const
+	bool MeshTriangle::Intersects(F32& tmin, const Ray& ray)const
 	{
-		VML::VECTOR3F v0 = (elementTransform.position + VML::Vector(pMesh->positions[face.v[0].vertex])).asVector3();
-		VML::VECTOR3F v1 = (elementTransform.position + VML::Vector(pMesh->positions[face.v[1].vertex])).asVector3();
-		VML::VECTOR3F v2 = (elementTransform.position + VML::Vector(pMesh->positions[face.v[2].vertex])).asVector3();
+		VML::VECTOR3F v0 = pMesh->positions[face.v[0].vertex];
+		VML::VECTOR3F v1 = pMesh->positions[face.v[1].vertex];
+		VML::VECTOR3F v2 = pMesh->positions[face.v[2].vertex];
 
 		D64 a = v0.x - v1.x, b = v0.x - v2.x, c = ray.GetDirection().getX(), d = v0.x - ray.GetOrigin().getX();
 		D64 e = v0.y - v1.y, f = v0.y - v2.y, g = ray.GetDirection().getY(), h = v0.y - ray.GetOrigin().getY();

@@ -27,7 +27,7 @@ namespace RE
 		return 0.5f;
 	}
 
-	VML::Vector AmbientOccluder::GetDirectionFromPoint(const VML::Vector& point)const
+	VML::Vector AmbientOccluder::GetDirectionFromPoint(const VML::Vector& point)
 	{
 		return VML::VectorZero();
 	}

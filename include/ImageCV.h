@@ -58,6 +58,8 @@ namespace RE
 		void SetBuffer(ColorBuffer2D * pBuffer);
 
 		void Update(U32 row, U32 col);
+		void Update(U32 startRow, U32 startCol, U32 endRow, U32 endCol);
+		void Show();
 
 	private:
 #ifndef HIDE_OPENCV

@@ -31,16 +31,30 @@ namespace RE
 		config.addSetting("num_samples", &numSamples, P4_CR_I32);
 		config.addSetting("viewport_sampler_type", &vpSamplerType, P4_CR_STRING);
 
+		config.addSetting("use_multithreading", &bUseMultiThreading, P4_CR_BOOL);
+		config.addSetting("num_threads", &numThreads, P4_CR_U8);
+
 		config.importSettings(configFile);
+
+		if (!bUseMultiThreading)
+			numThreads = 1;
 
 		SamplerFunc = GetSamplerGeneratorFromString(vpSamplerType);
 		NumSamples = numSamples;
 
 		// Create viewport
 		if (numSamples == 1)
-			vp = Viewport(resX, resY, RegularSampler, numSamples);
+			vp = Viewport(resX, resY, RegularSampler, numSamples, numThreads);
 		else
-			vp = Viewport(resX, resY, SamplerFunc, numSamples);
+			vp = Viewport(resX, resY, SamplerFunc, numSamples, numThreads);
+
+		// Create render target buffer and depth buffer
+		renderBuffer = ColorBuffer2D(vp.GetWidth(), vp.GetHeight(), true);
+		depthBuffer = Buffer2D<F32>(vp.GetWidth(), vp.GetHeight(), false);
+
+		depthBuffer.Fill(F32_MAX);
+
+		imageTracker.SetBuffer(&renderBuffer);
 	}
 
 
@@ -51,6 +65,14 @@ namespace RE
 		pCamera = pWorld->GetCamera();
 		pCamera->SetViewport(vp);
 		pCamera->SetBackgroundColor(bkgColor);
+	}
+
+	void RenderingEngine::RenderScene()
+	{
+		if (bUseMultiThreading)
+			RenderScene_Multi();
+		else
+			RenderScene_Single();
 	}
 
 

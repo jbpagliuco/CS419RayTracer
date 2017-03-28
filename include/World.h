@@ -9,6 +9,7 @@
 #include <Color.h>
 #include <Grid.h>
 #include <KDTree.h>
+#include <Renderable.h>
 
 namespace RE
 {
@@ -21,23 +22,6 @@ namespace RE
 		Color color;
 		F32 depth;
 	};
-
-
-	// A renderable element (sphere, tri, etc)
-	struct WorldElement
-	{
-		WorldElement() {}
-		// Constructor.
-		// @param name - The name of the world element.
-		WorldElement(const std::string& name) : name(name) {}
-
-	public:
-		std::string name;
-
-		Transform transform;
-		Geometry* pGeometry;
-		Material* pMaterial;
-	};
 	
 
 	// Output of a ray trace intersection
@@ -46,7 +30,7 @@ namespace RE
 		ElementIntersection() : bHit(false) { }
 
 		bool bHit;
-		WorldElement element;
+		Renderable element;
 		RayIntersection rayInt;
 		Ray ray;
 	};
@@ -57,7 +41,7 @@ namespace RE
 
 
 
-	class WorldGrid : public RegularGrid<WorldElement, ElementIntersection>
+	class WorldGrid : public RegularGrid<Renderable, ElementIntersection>
 	{
 	public:
 		WorldGrid();
@@ -67,11 +51,11 @@ namespace RE
 	protected:
 		// Adds an object to the grid.
 		// @param object - The object to add.
-		virtual void AddObject(const WorldElement& object) override;
+		virtual void AddObject(const Renderable& object) override;
 
 		// Places an object in its cell.
 		// @param pObject - A pointer to the object to place.
-		virtual void PlaceObject(const WorldElement* pObject) override;
+		virtual void PlaceObject(const Renderable* pObject) override;
 
 		// Trace a ray through the objects and do the necessary calculations.
 		// @param [out] out - The output.
@@ -111,7 +95,7 @@ namespace RE
 	{
 	public:
 		KDTypeWorldElement() = default;
-		KDTypeWorldElement(WorldElement e);
+		KDTypeWorldElement(Renderable e);
 
 		virtual ~KDTypeWorldElement();
 
@@ -120,7 +104,7 @@ namespace RE
 		virtual BoundingBox GetBoundingBox()const override;
 
 	private:
-		WorldElement e;
+		Renderable e;
 
 		friend class World;
 	};
@@ -137,12 +121,13 @@ namespace RE
 
 		// Adds an element to the world.
 		// @param element - The element to add.
-		void AddElement(const WorldElement& element);
+		void AddElement(const Renderable& element);
 		// Destroys the world.
 		void DestroyWorld();
 
 		// Gets a list of all the elements in the world.
-		const std::vector<KDTypeWorldElement>& GetWorldElements()const;
+		//const std::vector<KDTypeWorldElement>& GetRenderables()const;
+		const std::vector<Renderable>& GetRenderables()const;
 
 		// Sets the camera to render from.
 		// @param pCamera - A pointer to the camera.
@@ -174,10 +159,12 @@ namespace RE
 
 	private:
 		Camera * pCamera;
-		std::vector<KDTypeWorldElement> elements;
+		//std::vector<KDTypeWorldElement> elements;
+		std::vector<Renderable> elements;
 		std::vector<Light*> lights;
 
-		KDTree<KDTypeWorldElement> tree;
+		//KDTree<KDTypeWorldElement> tree;
+		WorldGrid grid;
 	};
 
 }

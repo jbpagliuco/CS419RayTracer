@@ -47,6 +47,8 @@ namespace RE
 
 	struct RayIntersection
 	{
+		RayIntersection() : t(F32_MAX) {}
+
 		// Distance along the ray.
 		F32 t;
 
